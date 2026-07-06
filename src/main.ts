@@ -1519,7 +1519,7 @@ class App {
                     }
                 }
                 if (autoAppliedCount > 0) {
-                    statusEl.textContent = `已加载: ${group.name} | 自动加载了 ${autoAppliedCount} 个匹配的世界贴图`;
+                    statusEl.textContent = `已加载: ${group.name} | 自动加载了 ${autoAppliedCount} 个匹配的地图贴图`;
                 }
             }
 

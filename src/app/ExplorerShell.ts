@@ -122,7 +122,7 @@ export function initExplorerShell({
         const state = explorerStore.getState();
         const parts: string[] = [];
         if (state.activeView === 'terrain') {
-            const worldLabel = state.terrain.lastWorldNumber !== null ? `世界 ${state.terrain.lastWorldNumber}` : '世界查看器';
+            const worldLabel = state.terrain.lastWorldNumber !== null ? `地图 ${state.terrain.lastWorldNumber}` : '地图查看器';
             parts.push(worldLabel);
             if (state.terrain.selectedObject?.displayName) {
                 parts.push(state.terrain.selectedObject.displayName);
@@ -183,7 +183,7 @@ export function initExplorerShell({
         container.innerHTML = '';
 
         if (worldNumbers.length === 0) {
-            container.appendChild(createExplorerEmpty('尚未加载世界。'));
+            container.appendChild(createExplorerEmpty('尚未加载地图。'));
             return;
         }
 
@@ -195,7 +195,7 @@ export function initExplorerShell({
         worldNumbers.forEach(worldNumber => {
             const option = document.createElement('option');
             option.value = `${worldNumber}`;
-            option.textContent = `世界 ${worldNumber}`;
+            option.textContent = `地图 ${worldNumber}`;
             if (selectedWorldNumber === worldNumber) {
                 option.selected = true;
             }
@@ -230,7 +230,7 @@ export function initExplorerShell({
         }
 
         switchToView('bmd');
-        app.setStatusMessage(`模型 "${entry.label}" 当前不可用。请先重新加载相关的世界数据。`);
+        app.setStatusMessage(`模型 "${entry.label}" 当前不可用。请先重新加载相关的地图数据。`);
     }
 
     async function openBookmark(bookmark: ExplorerBookmark): Promise<void> {
@@ -286,8 +286,8 @@ export function initExplorerShell({
                 const label = document.createElement('div');
                 label.className = 'explorer-item-label';
                 label.innerHTML = recentEntry
-                    ? `${bookmark.name}<span class="explorer-item-meta">世界 ${bookmark.worldNumber} • 最近 ${formatRelativeTime(recentEntry.timestamp)}</span>`
-                    : `${bookmark.name}<span class="explorer-item-meta">世界 ${bookmark.worldNumber}</span>`;
+                    ? `${bookmark.name}<span class="explorer-item-meta">地图 ${bookmark.worldNumber} • 最近 ${formatRelativeTime(recentEntry.timestamp)}</span>`
+                    : `${bookmark.name}<span class="explorer-item-meta">地图 ${bookmark.worldNumber}</span>`;
                 item.appendChild(label);
                 item.appendChild(createActionButton('打开', () => { void openBookmark(bookmark); }));
                 item.appendChild(createActionButton('重命名', () => {
@@ -379,7 +379,7 @@ export function initExplorerShell({
     terrainScene.onWorldLoaded = (worldNumber) => {
         explorerStore.pushRecentWorld({
             worldNumber,
-            label: `世界 ${worldNumber}`,
+            label: `地图 ${worldNumber}`,
             timestamp: Date.now(),
         });
         explorerStore.setTerrainState(terrainScene.getCurrentState());
@@ -397,7 +397,7 @@ export function initExplorerShell({
     };
     terrainScene.onOpenModelRequest = (selection, modelFile) => {
         if (!modelFile) {
-            terrainScene.setStatusMessage(`"${selection.displayName}" 的模型在当前世界文件中不可用。`);
+            terrainScene.setStatusMessage(`"${selection.displayName}" 的模型在当前地图文件中不可用。`);
             return;
         }
         switchToView('bmd');

@@ -394,7 +394,7 @@ export class AttInspector {
             set('att-meta-format',   '-');
             set('att-meta-tiles',    '-');
             set('att-meta-flagged',  '-');
-            if (this.statusEl) this.statusEl.textContent = '没有 ATT 数据。请加载世界或拖放 ATT 文件。';
+            if (this.statusEl) this.statusEl.textContent = '没有 ATT 数据。请加载地图或拖放 ATT 文件。';
             return;
         }
 
@@ -408,7 +408,7 @@ export class AttInspector {
         if (this.statusEl) {
             this.statusEl.textContent = this.loadedFileName
                 ? `${this.loadedFileName} · ${s.formatLabel}`
-                : `世界 ${this.worldNumber} · ${s.formatLabel}`;
+                : `地图 ${this.worldNumber} · ${s.formatLabel}`;
         }
     }
 

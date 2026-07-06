@@ -347,7 +347,7 @@ export class TerrainScene {
         }
 
         if (!this.loadedWorldNumber && state.lastWorldNumber !== null) {
-            this.setLastContextMessage(`上次会话: 世界 ${state.lastWorldNumber}。重新加载数据文件夹以恢复相机和对象选择。`);
+            this.setLastContextMessage(`上次会话: 地图 ${state.lastWorldNumber}。重新加载数据文件夹以恢复相机和对象选择。`);
         }
 
         if (this.loadedWorldNumber !== null && state.lastWorldNumber === this.loadedWorldNumber) {
@@ -376,7 +376,7 @@ export class TerrainScene {
 
     public createCurrentBookmark(name: string): ExplorerBookmark | null {
         if (this.loadedWorldNumber === null) {
-            this.setBookmarkStatus('请先加载世界再保存书签。');
+            this.setBookmarkStatus('请先加载地图再保存书签。');
             return null;
         }
 
@@ -685,9 +685,9 @@ export class TerrainScene {
 
         if (announceStatus) {
             if (fallbackReason) {
-                this.setStatusMessage(`世界查看器 WebGPU 初始化失败，使用 WebGL。${fallbackReason}`);
+                this.setStatusMessage(`地图查看器 WebGPU 初始化失败，使用 WebGL。${fallbackReason}`);
             } else if (preference !== 'webgl') {
-                this.setStatusMessage(`世界查看器渲染器: ${this.rendererActiveBackend === 'webgpu' ? 'WebGPU' : 'WebGL 回退'} 就绪。`);
+                this.setStatusMessage(`地图查看器渲染器: ${this.rendererActiveBackend === 'webgpu' ? 'WebGPU' : 'WebGL 回退'} 就绪。`);
             }
         }
 
@@ -1062,12 +1062,12 @@ export class TerrainScene {
             }
 
             if (worldNumbers.length === 0) {
-                if (this.statusEl) this.statusEl.textContent = `数据文件夹中未找到世界文件夹: ${folderPath}`;
+                if (this.statusEl) this.statusEl.textContent = `数据文件夹中未找到地图文件夹: ${folderPath}`;
                 return;
             }
 
             this.availableWorldNumbers = worldNumbers;
-            if (this.statusEl) this.statusEl.textContent = `已找到 ${worldNumbers.length} 个世界。选择一个进行加载。`;
+            if (this.statusEl) this.statusEl.textContent = `已找到 ${worldNumbers.length} 个地图。选择一个进行加载。`;
             this.populateWorldSelect(worldNumbers);
             await this.loadWorld(this.pickInitialWorldToLoad(worldNumbers));
         }
@@ -1096,12 +1096,12 @@ export class TerrainScene {
         const worldNumbers = this.scanWorldNumbers();
 
         if (worldNumbers.length === 0) {
-            if (this.statusEl) this.statusEl.textContent = '数据文件夹中未找到世界文件夹。';
+            if (this.statusEl) this.statusEl.textContent = '数据文件夹中未找到地图文件夹。';
             return;
         }
 
         this.availableWorldNumbers = worldNumbers;
-        if (this.statusEl) this.statusEl.textContent = `已找到 ${worldNumbers.length} 个世界。选择一个进行加载。`;
+        if (this.statusEl) this.statusEl.textContent = `已找到 ${worldNumbers.length} 个地图。选择一个进行加载。`;
         this.populateWorldSelect(worldNumbers);
 
         void this.loadWorld(this.pickInitialWorldToLoad(worldNumbers));
@@ -1134,7 +1134,7 @@ export class TerrainScene {
         for (const n of worldNumbers) {
             const opt = document.createElement('option');
             opt.value = n.toString();
-            opt.textContent = `世界 ${n}`;
+            opt.textContent = `地图 ${n}`;
             this.worldSelectEl.appendChild(opt);
         }
 
@@ -1143,7 +1143,7 @@ export class TerrainScene {
 
     /** Load a specific world by number */
     private async loadWorld(worldNumber: number) {
-        if (this.statusEl) this.statusEl.textContent = `正在加载世界 ${worldNumber}...`;
+        if (this.statusEl) this.statusEl.textContent = `正在加载地图 ${worldNumber}...`;
         this.updateStats(0, 0);
         this.objectRecords = [];
         this.animatedObjectInstances = [];
@@ -1159,7 +1159,7 @@ export class TerrainScene {
 
         let files = this.buildWorldFiles(worldNumber);
         if (files.size === 0 && this.dataRootPath && isElectron()) {
-            if (this.statusEl) this.statusEl.textContent = `正在从磁盘加载世界 ${worldNumber} 文件...`;
+            if (this.statusEl) this.statusEl.textContent = `正在从磁盘加载地图 ${worldNumber} 文件...`;
             try {
                 files = await this.loadWorldFilesFromElectron(worldNumber);
             } catch (error) {
@@ -1169,7 +1169,7 @@ export class TerrainScene {
                     if (message.includes("No handler registered for 'fs:readTerrainWorldFiles'")) {
                         this.statusEl.textContent = 'Electron 后端已过时。请重启桌面应用。';
                     } else {
-                        this.statusEl.textContent = `加载世界 ${worldNumber} 文件出错: ${message}`;
+                        this.statusEl.textContent = `加载地图 ${worldNumber} 文件出错: ${message}`;
                     }
                 }
                 return;
@@ -1177,7 +1177,7 @@ export class TerrainScene {
         }
 
         if (files.size === 0) {
-            if (this.statusEl) this.statusEl.textContent = `未找到世界 ${worldNumber} 的文件。`;
+            if (this.statusEl) this.statusEl.textContent = `未找到地图 ${worldNumber} 的文件。`;
             this.updateStats(0, 0);
             return;
         }
@@ -1216,7 +1216,7 @@ export class TerrainScene {
             this.controls.target.set(worldCenter, 0, worldCenter);
             this.camera.position.set(worldCenter, 5000, worldCenter + 5000);
 
-            if (this.statusEl) this.statusEl.textContent = `世界 ${result.mapNumber} 已加载。正在加载对象...`;
+            if (this.statusEl) this.statusEl.textContent = `地图 ${result.mapNumber} 已加载。正在加载对象...`;
 
             if (result.objectsData) {
                 const objectResult: TerrainObjectLoadResult = await loadTerrainObjects(
@@ -1258,7 +1258,7 @@ export class TerrainScene {
 
             if (this.statusEl) {
                 const objCount = result.objectsData?.objects.length ?? 0;
-                this.statusEl.textContent = `世界 ${result.mapNumber} 已加载。${objCount} 个对象。`;
+                this.statusEl.textContent = `地图 ${result.mapNumber} 已加载。${objCount} 个对象。`;
             }
         } catch (e) {
             console.error('Terrain loading error:', e);
@@ -1533,8 +1533,8 @@ export class TerrainScene {
         if (this.openModelBtn) this.openModelBtn.disabled = !record.modelFile;
         if (this.openModelHintEl) {
             this.openModelHintEl.textContent = record.modelFile
-	                ? '模型文件已从当前世界数据中解析。'
-	                : '模型文件在当前加载的世界文件中不可用。';
+		                ? '模型文件已从当前地图数据中解析。'
+		                : '模型文件在当前加载的地图文件中不可用。';
         }
     }
 
@@ -1595,7 +1595,7 @@ export class TerrainScene {
             this.objectEditorTitleEl.textContent = selection.displayName;
         }
         if (this.objectEditorMetaEl) {
-            this.objectEditorMetaEl.textContent = `世界 ${selection.worldNumber} / 类型 ${selection.type}`;
+            this.objectEditorMetaEl.textContent = `地图 ${selection.worldNumber} / 类型 ${selection.type}`;
         }
         if (this.objectEditorPosXEl) this.objectEditorPosXEl.value = selection.position.x.toFixed(0);
         if (this.objectEditorPosYEl) this.objectEditorPosYEl.value = selection.position.y.toFixed(0);
@@ -1813,7 +1813,7 @@ export class TerrainScene {
 
     private async exportCurrentWorldObj() {
         if (!this.loadedObjectsData || this.loadedWorldNumber === null) {
-            this.setObjectEditorStatus('导出前请先加载包含 OBJ 数据的世界。');
+            this.setObjectEditorStatus('导出前请先加载包含 OBJ 数据的地图。');
             return;
         }
 
@@ -2419,8 +2419,8 @@ export class TerrainScene {
     private updateTerrainAttributePanel(summary: TerrainAttributeSummary | null) {
         if (this.terrainAttributeStatusEl) {
             this.terrainAttributeStatusEl.textContent = summary
-                ? `已加载世界 ${this.loadedWorldNumber ?? '-'} 的 ATT 数据`
-                : '加载世界以查看 ATT 元数据。';
+                ? `已加载地图 ${this.loadedWorldNumber ?? '-'} 的 ATT 数据`
+	                : '加载地图以查看 ATT 元数据。';
         }
         if (this.terrainAttributeVersionEl) {
             this.terrainAttributeVersionEl.textContent = summary ? `${summary.version}` : '-';
