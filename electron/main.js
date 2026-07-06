@@ -1,5 +1,5 @@
 // Electron main process
-const { app, BrowserWindow, dialog, ipcMain, session } = require('electron');
+const { app, BrowserWindow, dialog, ipcMain, session, Menu } = require('electron');
 const path = require('path');
 const fs = require('fs').promises;
 
@@ -67,7 +67,7 @@ function createWindow() {
       // Enable file path in drag & drop events
       webSecurity: true,
     },
-    title: 'MU Online BMD Viewer',
+    title: 'MU Online BMD 查看器',
     icon: path.join(__dirname, '../public/vite.svg'),
   });
 
@@ -105,6 +105,126 @@ function createWindow() {
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
+
+  // Build localized (Chinese) application menu
+  const isMac = process.platform === 'darwin';
+  const menuTemplate = [
+    // { 字符: 文件 }
+    {
+      label: '文件',
+      submenu: [
+        {
+          label: '打开文件…',
+          accelerator: 'CmdOrCtrl+O',
+          click: async () => {
+            const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, {
+              properties: ['openFile'],
+              filters: [
+                { name: 'BMD 模型', extensions: ['bmd'] },
+                { name: '所有文件', extensions: ['*'] },
+              ],
+            });
+            if (!canceled && filePaths.length > 0) {
+              mainWindow.webContents.send('menu:openFile', filePaths[0]);
+            }
+          },
+        },
+        {
+          label: '打开文件夹…',
+          click: async () => {
+            const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, {
+              properties: ['openDirectory'],
+            });
+            if (!canceled && filePaths.length > 0) {
+              mainWindow.webContents.send('menu:openDirectory', filePaths[0]);
+            }
+          },
+        },
+        { type: 'separator' },
+        isMac ? { role: 'close', label: '关闭窗口' } : { role: 'close', label: '关闭' },
+      ],
+    },
+    // { 字符: 编辑 }
+    {
+      label: '编辑',
+      submenu: [
+        { role: 'undo', label: '撤销' },
+        { role: 'redo', label: '重做' },
+        { type: 'separator' },
+        { role: 'cut', label: '剪切' },
+        { role: 'copy', label: '复制' },
+        { role: 'paste', label: '粘贴' },
+        { role: 'selectAll', label: '全选' },
+      ],
+    },
+    // { 字符: 视图 }
+    {
+      label: '视图',
+      submenu: [
+        { role: 'reload', label: '重新加载' },
+        { role: 'forceReload', label: '强制重新加载' },
+        { role: 'toggleDevTools', label: '开发者工具' },
+        { type: 'separator' },
+        { role: 'resetZoom', label: '实际大小' },
+        { role: 'zoomIn', label: '放大' },
+        { role: 'zoomOut', label: '缩小' },
+        { type: 'separator' },
+        { role: 'togglefullscreen', label: '全屏' },
+      ],
+    },
+    // { 字符: 窗口 }
+    {
+      label: '窗口',
+      submenu: [
+        { role: 'minimize', label: '最小化' },
+        { role: 'zoom', label: '缩放' },
+        ...(isMac
+          ? [
+              { type: 'separator' },
+              { role: 'front', label: '全部置于顶层' },
+            ]
+          : []),
+      ],
+    },
+    // { 字符: 帮助 }
+    {
+      label: '帮助',
+      submenu: [
+        {
+          label: '关于 MU Online BMD 查看器',
+          click: () => {
+            dialog.showMessageBox(mainWindow, {
+              type: 'info',
+              title: '关于',
+              message: 'MU Online BMD 查看器',
+              detail: 'MU Online BMD 模型查看与编辑工具\n基于 Three.js (WebGPU/WebGL) 构建',
+            });
+          },
+        },
+      ],
+    },
+  ];
+
+  // On macOS, add the app menu as the first item
+  if (isMac) {
+    menuTemplate.unshift({
+      label: app.name,
+      submenu: [
+        { role: 'about', label: `关于 ${app.name}` },
+        { type: 'separator' },
+        { role: 'services', label: '服务' },
+        { type: 'separator' },
+        { role: 'hide', label: '隐藏' },
+        { role: 'hideOthers', label: '隐藏其他' },
+        { role: 'unhide', label: '显示全部' },
+        { type: 'separator' },
+        { role: 'quit', label: '退出' },
+      ],
+    });
+  }
+
+  const menu = Menu.buildFromTemplate(menuTemplate);
+  Menu.setApplicationMenu(menu);
 }
 
 // Handle file selection dialog
@@ -382,7 +502,7 @@ ipcMain.handle('fs:writeFileInDirectory', async (event, rootPath, relativePath, 
   if (typeof rootPath !== 'string' || !rootPath || typeof relativePath !== 'string' || !relativePath) {
     return {
       path: null,
-      error: 'Invalid export path.',
+      error: '无效的导出路径。',
     };
   }
 
@@ -393,7 +513,7 @@ ipcMain.handle('fs:writeFileInDirectory', async (event, rootPath, relativePath, 
     if (!isInsideRoot) {
       return {
         path: null,
-        error: 'Export path escapes the selected folder.',
+        error: '导出路径超出了所选文件夹。',
       };
     }
 
@@ -407,7 +527,7 @@ ipcMain.handle('fs:writeFileInDirectory', async (event, rootPath, relativePath, 
     } else {
       return {
         path: null,
-        error: 'Invalid export data.',
+        error: '无效的导出数据。',
       };
     }
 
