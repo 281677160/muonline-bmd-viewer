@@ -153,7 +153,7 @@ export class AttInspector {
             this.refresh();
         } catch (err) {
             const msg = err instanceof Error ? err.message : String(err);
-            if (this.statusEl) this.statusEl.textContent = `Failed to load: ${msg}`;
+            if (this.statusEl) this.statusEl.textContent = `加载失败: ${msg}`;
         }
     }
 
@@ -351,7 +351,7 @@ export class AttInspector {
             }
             html += '</div>';
         } else {
-            html += '<div class="att-tip-empty">No flags set</div>';
+            html += '<div class="att-tip-empty">无标志位设置</div>';
         }
 
         this.tooltipEl.innerHTML = html;
@@ -394,11 +394,11 @@ export class AttInspector {
             set('att-meta-format',   '-');
             set('att-meta-tiles',    '-');
             set('att-meta-flagged',  '-');
-            if (this.statusEl) this.statusEl.textContent = 'No ATT data. Load a world or drop an ATT file.';
+            if (this.statusEl) this.statusEl.textContent = '没有 ATT 数据。请加载世界或拖放 ATT 文件。';
             return;
         }
 
-        const worldLabel = this.loadedFileName ? `File` : `${this.worldNumber ?? '-'}`;
+        const worldLabel = this.loadedFileName ? `文件` : `${this.worldNumber ?? '-'}`;
         set('att-meta-world',   worldLabel);
         set('att-meta-version', `${s.version}`);
         set('att-meta-format',  s.formatLabel);
@@ -408,7 +408,7 @@ export class AttInspector {
         if (this.statusEl) {
             this.statusEl.textContent = this.loadedFileName
                 ? `${this.loadedFileName} · ${s.formatLabel}`
-                : `World ${this.worldNumber} · ${s.formatLabel}`;
+                : `世界 ${this.worldNumber} · ${s.formatLabel}`;
         }
     }
 
@@ -442,7 +442,7 @@ export class AttInspector {
         const toggle = document.createElement('button');
         toggle.type      = 'button';
         toggle.className = 'att-legend-toggle';
-        toggle.title     = hidden ? 'Show on map' : 'Hide from map';
+        toggle.title     = hidden ? '在地图上显示' : '从地图隐藏';
         toggle.innerHTML = hidden
             ? `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`
             : `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;

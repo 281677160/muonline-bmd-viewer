@@ -337,17 +337,17 @@ export class TerrainScene {
         }
         if (this.brightnessSliderEl && this.brightnessLabelEl) {
             this.brightnessSliderEl.value = `${state.brightness}`;
-            this.brightnessLabelEl.textContent = `Brightness: ${state.brightness.toFixed(2)}×`;
+            this.brightnessLabelEl.textContent = `亮度: ${state.brightness.toFixed(2)}×`;
             this.setBrightness(state.brightness);
         }
         if (this.objectDistanceSliderEl && this.objectDistanceLabelEl) {
             this.objectDistanceSliderEl.value = `${Math.round(state.objectDistance)}`;
             this.objectDrawDistance = Math.max(500, state.objectDistance);
-            this.objectDistanceLabelEl.textContent = `Object Distance: ${Math.round(this.objectDrawDistance)}`;
+            this.objectDistanceLabelEl.textContent = `对象距离: ${Math.round(this.objectDrawDistance)}`;
         }
 
         if (!this.loadedWorldNumber && state.lastWorldNumber !== null) {
-            this.setLastContextMessage(`Last session: World ${state.lastWorldNumber}. Reload Data folder to restore camera and object selection.`);
+            this.setLastContextMessage(`上次会话: 世界 ${state.lastWorldNumber}。重新加载数据文件夹以恢复相机和对象选择。`);
         }
 
         if (this.loadedWorldNumber !== null && state.lastWorldNumber === this.loadedWorldNumber) {
@@ -376,13 +376,13 @@ export class TerrainScene {
 
     public createCurrentBookmark(name: string): ExplorerBookmark | null {
         if (this.loadedWorldNumber === null) {
-            this.setBookmarkStatus('Load a world before saving a bookmark.');
+            this.setBookmarkStatus('请先加载世界再保存书签。');
             return null;
         }
 
         const trimmedName = name.trim();
         if (!trimmedName) {
-            this.setBookmarkStatus('Enter a bookmark name.');
+            this.setBookmarkStatus('请输入书签名称。');
             return null;
         }
 
@@ -400,7 +400,7 @@ export class TerrainScene {
 
     public async jumpToBookmark(bookmark: ExplorerBookmark): Promise<boolean> {
         if (!this.hasLoadedData()) {
-            this.setStatusMessage(`Reload Data folder to open bookmark "${bookmark.name}".`);
+            this.setStatusMessage(`重新加载数据文件夹以打开书签 "${bookmark.name}"。`);
             return false;
         }
 
@@ -415,7 +415,7 @@ export class TerrainScene {
                 this.selectObjectRecord(matched);
             }
         }
-        this.setBookmarkStatus(`Jumped to "${bookmark.name}".`);
+        this.setBookmarkStatus(`已跳转至 "${bookmark.name}"。`);
         return true;
     }
 
@@ -555,7 +555,7 @@ export class TerrainScene {
                 ? 'WebGPU'
                 : 'WebGL';
         const active = this.rendererActiveBackend === 'webgpu' ? 'WebGPU' : 'WebGL';
-        this.rendererBackendStatusEl.textContent = `Renderer: ${active} active (preferred: ${preferred})`;
+        this.rendererBackendStatusEl.textContent = `渲染器: ${active} 已激活 (首选: ${preferred})`;
     }
 
     private isEditableShortcutTarget(target: EventTarget | null): boolean {
@@ -632,7 +632,7 @@ export class TerrainScene {
             this.rendererBackendSelectEl.value = preference;
         }
         this.rendererReady = false;
-        this.updateRendererStatus(`Renderer: switching to ${preference === 'auto' ? 'Auto' : preference}…`);
+        this.updateRendererStatus(`渲染器: 正在切换至 ${preference === 'auto' ? '自动' : preference}…`);
 
         if (worldToReload !== null) {
             this.pendingRestoreState = { ...reloadState!, availableWorldNumbers: [...reloadState!.availableWorldNumbers] };
@@ -647,7 +647,7 @@ export class TerrainScene {
             try {
                 await renderer.init();
             } catch (error) {
-                fallbackReason = error instanceof Error ? error.message : 'WebGPU initialization failed';
+                fallbackReason = error instanceof Error ? error.message : 'WebGPU 初始化失败';
                 renderer.dispose();
                 renderer = this.createClassicWebGLRenderer();
                 this.configureRenderer(renderer);
@@ -685,15 +685,15 @@ export class TerrainScene {
 
         if (announceStatus) {
             if (fallbackReason) {
-                this.setStatusMessage(`World Viewer WebGPU init failed, using WebGL. ${fallbackReason}`);
+                this.setStatusMessage(`世界查看器 WebGPU 初始化失败，使用 WebGL。${fallbackReason}`);
             } else if (preference !== 'webgl') {
-                this.setStatusMessage(`World Viewer renderer: ${this.rendererActiveBackend === 'webgpu' ? 'WebGPU' : 'WebGL fallback'} ready.`);
+                this.setStatusMessage(`世界查看器渲染器: ${this.rendererActiveBackend === 'webgpu' ? 'WebGPU' : 'WebGL 回退'} 就绪。`);
             }
         }
 
         this.updateRendererStatus(
             fallbackReason
-                ? `Renderer: WebGL fallback active (${fallbackReason})`
+                ? `渲染器: WebGL 回退已激活 (${fallbackReason})`
                 : undefined,
         );
 
@@ -838,7 +838,7 @@ export class TerrainScene {
                 if (this.terrainAttOverlay) {
                     const isCurrentlyVisible = this.terrainAttOverlay.isVisible();
                     this.terrainAttOverlay.setVisible(!isCurrentlyVisible);
-                    this.attOverlayToggleBtn!.textContent = isCurrentlyVisible ? 'Show ATT Overlay' : 'Hide ATT Overlay';
+                    this.attOverlayToggleBtn!.textContent = isCurrentlyVisible ? '显示 ATT 叠加层' : '隐藏 ATT 叠加层';
                 }
             });
         }
@@ -957,12 +957,12 @@ export class TerrainScene {
         if (this.brightnessSliderEl && this.brightnessLabelEl) {
             this.brightnessSliderEl.addEventListener('input', (e) => {
                 const value = parseFloat((e.target as HTMLInputElement).value);
-                this.brightnessLabelEl!.textContent = `Brightness: ${value.toFixed(2)}×`;
+                this.brightnessLabelEl!.textContent = `亮度: ${value.toFixed(2)}×`;
                 this.setBrightness(value);
                 this.emitStateChanged();
             });
             const initialBrightness = parseFloat(this.brightnessSliderEl.value) || TERRAIN_BRIGHTNESS_DEFAULT;
-            this.brightnessLabelEl.textContent = `Brightness: ${initialBrightness.toFixed(2)}×`;
+            this.brightnessLabelEl.textContent = `亮度: ${initialBrightness.toFixed(2)}×`;
             this.setBrightness(initialBrightness);
         }
 
@@ -970,13 +970,13 @@ export class TerrainScene {
             this.objectDistanceSliderEl.addEventListener('input', (e) => {
                 const value = parseFloat((e.target as HTMLInputElement).value);
                 this.objectDrawDistance = Math.max(500, value);
-                this.objectDistanceLabelEl!.textContent = `Object Distance: ${Math.round(this.objectDrawDistance)}`;
+                this.objectDistanceLabelEl!.textContent = `对象距离: ${Math.round(this.objectDrawDistance)}`;
                 this.updateObjectDistanceCulling(true);
                 this.emitStateChanged();
             });
             const initialDistance = parseFloat(this.objectDistanceSliderEl.value) || TERRAIN_OBJECT_DRAW_DISTANCE_DEFAULT;
             this.objectDrawDistance = Math.max(500, initialDistance);
-            this.objectDistanceLabelEl.textContent = `Object Distance: ${Math.round(this.objectDrawDistance)}`;
+            this.objectDistanceLabelEl.textContent = `对象距离: ${Math.round(this.objectDrawDistance)}`;
         }
 
         this.minimapCanvas?.addEventListener('click', event => {
@@ -1005,7 +1005,7 @@ export class TerrainScene {
             if (this.bookmarkNameEl) {
                 this.bookmarkNameEl.value = '';
             }
-            this.setBookmarkStatus(`Saved "${bookmark.name}".`);
+            this.setBookmarkStatus(`已保存 "${bookmark.name}"。`);
         });
 
         document.getElementById('terrain-focus-object-btn')?.addEventListener('click', () => {
@@ -1043,7 +1043,7 @@ export class TerrainScene {
         if (folderPath) {
             this.dataRootPath = folderPath;
             this.dataFiles.clear();
-            if (this.statusEl) this.statusEl.textContent = 'Scanning Data folder...';
+            if (this.statusEl) this.statusEl.textContent = '正在扫描数据文件夹...';
 
             let worldNumbers: number[];
             try {
@@ -1053,21 +1053,21 @@ export class TerrainScene {
                 const message = (error as Error)?.message || String(error);
                 if (this.statusEl) {
                     if (message.includes("No handler registered for 'fs:scanWorldFolders'")) {
-                        this.statusEl.textContent = 'Electron backend is outdated. Restart the desktop app.';
+                        this.statusEl.textContent = 'Electron 后端已过时。请重启桌面应用。';
                     } else {
-                        this.statusEl.textContent = `Error scanning Data folder: ${message}`;
+                        this.statusEl.textContent = `扫描数据文件夹出错: ${message}`;
                     }
                 }
                 return;
             }
 
             if (worldNumbers.length === 0) {
-                if (this.statusEl) this.statusEl.textContent = `No World folders found in Data: ${folderPath}`;
+                if (this.statusEl) this.statusEl.textContent = `数据文件夹中未找到世界文件夹: ${folderPath}`;
                 return;
             }
 
             this.availableWorldNumbers = worldNumbers;
-            if (this.statusEl) this.statusEl.textContent = `Found ${worldNumbers.length} world(s). Select one to load.`;
+            if (this.statusEl) this.statusEl.textContent = `已找到 ${worldNumbers.length} 个世界。选择一个进行加载。`;
             this.populateWorldSelect(worldNumbers);
             await this.loadWorld(this.pickInitialWorldToLoad(worldNumbers));
         }
@@ -1075,7 +1075,7 @@ export class TerrainScene {
 
     /** Browser: handle dropped / selected Data folder files */
     private handleDataFiles(fileList: FileList) {
-        if (this.statusEl) this.statusEl.textContent = 'Scanning Data folder...';
+        if (this.statusEl) this.statusEl.textContent = '正在扫描数据文件夹...';
 
         this.dataFiles.clear();
         this.dataRootPath = null;
@@ -1096,12 +1096,12 @@ export class TerrainScene {
         const worldNumbers = this.scanWorldNumbers();
 
         if (worldNumbers.length === 0) {
-            if (this.statusEl) this.statusEl.textContent = 'No World folders found in Data.';
+            if (this.statusEl) this.statusEl.textContent = '数据文件夹中未找到世界文件夹。';
             return;
         }
 
         this.availableWorldNumbers = worldNumbers;
-        if (this.statusEl) this.statusEl.textContent = `Found ${worldNumbers.length} world(s). Select one to load.`;
+        if (this.statusEl) this.statusEl.textContent = `已找到 ${worldNumbers.length} 个世界。选择一个进行加载。`;
         this.populateWorldSelect(worldNumbers);
 
         void this.loadWorld(this.pickInitialWorldToLoad(worldNumbers));
@@ -1134,7 +1134,7 @@ export class TerrainScene {
         for (const n of worldNumbers) {
             const opt = document.createElement('option');
             opt.value = n.toString();
-            opt.textContent = `World ${n}`;
+            opt.textContent = `世界 ${n}`;
             this.worldSelectEl.appendChild(opt);
         }
 
@@ -1143,7 +1143,7 @@ export class TerrainScene {
 
     /** Load a specific world by number */
     private async loadWorld(worldNumber: number) {
-        if (this.statusEl) this.statusEl.textContent = `Loading World ${worldNumber}...`;
+        if (this.statusEl) this.statusEl.textContent = `正在加载世界 ${worldNumber}...`;
         this.updateStats(0, 0);
         this.objectRecords = [];
         this.animatedObjectInstances = [];
@@ -1159,7 +1159,7 @@ export class TerrainScene {
 
         let files = this.buildWorldFiles(worldNumber);
         if (files.size === 0 && this.dataRootPath && isElectron()) {
-            if (this.statusEl) this.statusEl.textContent = `Loading World ${worldNumber} files from disk...`;
+            if (this.statusEl) this.statusEl.textContent = `正在从磁盘加载世界 ${worldNumber} 文件...`;
             try {
                 files = await this.loadWorldFilesFromElectron(worldNumber);
             } catch (error) {
@@ -1167,9 +1167,9 @@ export class TerrainScene {
                 const message = (error as Error)?.message || String(error);
                 if (this.statusEl) {
                     if (message.includes("No handler registered for 'fs:readTerrainWorldFiles'")) {
-                        this.statusEl.textContent = 'Electron backend is outdated. Restart the desktop app.';
+                        this.statusEl.textContent = 'Electron 后端已过时。请重启桌面应用。';
                     } else {
-                        this.statusEl.textContent = `Error loading World ${worldNumber} files: ${message}`;
+                        this.statusEl.textContent = `加载世界 ${worldNumber} 文件出错: ${message}`;
                     }
                 }
                 return;
@@ -1177,7 +1177,7 @@ export class TerrainScene {
         }
 
         if (files.size === 0) {
-            if (this.statusEl) this.statusEl.textContent = `No files found for World ${worldNumber}.`;
+            if (this.statusEl) this.statusEl.textContent = `未找到世界 ${worldNumber} 的文件。`;
             this.updateStats(0, 0);
             return;
         }
@@ -1216,7 +1216,7 @@ export class TerrainScene {
             this.controls.target.set(worldCenter, 0, worldCenter);
             this.camera.position.set(worldCenter, 5000, worldCenter + 5000);
 
-            if (this.statusEl) this.statusEl.textContent = `World ${result.mapNumber} loaded. Loading objects...`;
+            if (this.statusEl) this.statusEl.textContent = `世界 ${result.mapNumber} 已加载。正在加载对象...`;
 
             if (result.objectsData) {
                 const objectResult: TerrainObjectLoadResult = await loadTerrainObjects(
@@ -1224,7 +1224,7 @@ export class TerrainScene {
                     files,
                     result.mapNumber,
                     (loaded, total) => {
-                        if (this.statusEl) this.statusEl.textContent = `Loading objects: ${loaded}/${total}...`;
+                        if (this.statusEl) this.statusEl.textContent = `正在加载对象: ${loaded}/${total}...`;
                     },
                     {
                         animatedInstancingMode: getTerrainAnimatedInstancingModeForBackend(this.rendererActiveBackend),
@@ -1258,11 +1258,11 @@ export class TerrainScene {
 
             if (this.statusEl) {
                 const objCount = result.objectsData?.objects.length ?? 0;
-                this.statusEl.textContent = `World ${result.mapNumber} loaded. ${objCount} objects.`;
+                this.statusEl.textContent = `世界 ${result.mapNumber} 已加载。${objCount} 个对象。`;
             }
         } catch (e) {
             console.error('Terrain loading error:', e);
-            if (this.statusEl) this.statusEl.textContent = `Error: ${(e as Error).message}`;
+            if (this.statusEl) this.statusEl.textContent = `错误: ${(e as Error).message}`;
             this.updateStats(0, 0);
         }
     }
@@ -1513,7 +1513,7 @@ export class TerrainScene {
             this.objectEmptyEl?.classList.remove('hidden');
             this.objectTransformGizmoControlsEl?.classList.add('hidden');
             if (this.openModelHintEl) {
-                this.openModelHintEl.textContent = 'Select an object to inspect it.';
+                this.openModelHintEl.textContent = '选择一个对象以进行检查。';
             }
             if (this.openModelBtn) {
                 this.openModelBtn.disabled = true;
@@ -1526,15 +1526,15 @@ export class TerrainScene {
         this.objectTransformGizmoControlsEl?.classList.remove('hidden');
         if (this.objectWorldEl) this.objectWorldEl.textContent = `${record.selection.worldNumber}`;
         if (this.objectTypeEl) this.objectTypeEl.textContent = `${record.selection.type}`;
-        if (this.objectModelEl) this.objectModelEl.textContent = record.selection.modelName || 'Unresolved';
+        if (this.objectModelEl) this.objectModelEl.textContent = record.selection.modelName || '未解析';
         if (this.objectPositionEl) this.objectPositionEl.textContent = this.formatVector(record.selection.position);
         if (this.objectRotationEl) this.objectRotationEl.textContent = this.formatVector(record.selection.rotation);
         if (this.objectScaleEl) this.objectScaleEl.textContent = record.selection.scale.toFixed(2);
         if (this.openModelBtn) this.openModelBtn.disabled = !record.modelFile;
         if (this.openModelHintEl) {
             this.openModelHintEl.textContent = record.modelFile
-                ? 'Model file resolved from current world data.'
-                : 'Model file is not available in the currently loaded world files.';
+	                ? '模型文件已从当前世界数据中解析。'
+	                : '模型文件在当前加载的世界文件中不可用。';
         }
     }
 
@@ -1564,7 +1564,7 @@ export class TerrainScene {
         const result = await writeTerrainObjectOverrides(this.objectOverrides);
         this.objectOverridesPath = result.path;
         if (result.error) {
-            this.setObjectEditorStatus(`${statusPrefix} failed: ${result.error}`);
+            this.setObjectEditorStatus(`${statusPrefix} 失败: ${result.error}`);
             return;
         }
 
@@ -1595,7 +1595,7 @@ export class TerrainScene {
             this.objectEditorTitleEl.textContent = selection.displayName;
         }
         if (this.objectEditorMetaEl) {
-            this.objectEditorMetaEl.textContent = `World ${selection.worldNumber} / Type ${selection.type}`;
+            this.objectEditorMetaEl.textContent = `世界 ${selection.worldNumber} / 类型 ${selection.type}`;
         }
         if (this.objectEditorPosXEl) this.objectEditorPosXEl.value = selection.position.x.toFixed(0);
         if (this.objectEditorPosYEl) this.objectEditorPosYEl.value = selection.position.y.toFixed(0);
@@ -1604,8 +1604,8 @@ export class TerrainScene {
 
         this.renderObjectEditorMaterialRows(selection.worldNumber, selection.type);
         this.setObjectEditorStatus(this.objectOverridesPath
-            ? `Settings file: ${this.objectOverridesPath}`
-            : 'Settings file will be created on save.');
+            ? `设置文件: ${this.objectOverridesPath}`
+            : '设置文件将在保存时创建。');
     }
 
     private renderObjectEditorMaterialRows(worldNumber: number, objectType: number) {
@@ -1616,7 +1616,7 @@ export class TerrainScene {
         if (bindings.length === 0) {
             const empty = document.createElement('p');
             empty.className = 'control-note';
-            empty.textContent = 'No editable mesh materials found.';
+            empty.textContent = '未找到可编辑的网格材质。';
             this.objectEditorMaterialsEl.appendChild(empty);
             return;
         }
@@ -1645,7 +1645,7 @@ export class TerrainScene {
             alphaRow.className = 'terrain-alpha-row';
 
             const alphaLabel = document.createElement('span');
-            alphaLabel.textContent = 'Black Key';
+            alphaLabel.textContent = '黑色透明键';
 
             const alphaSlider = document.createElement('input');
             alphaSlider.type = 'range';
@@ -1697,7 +1697,7 @@ export class TerrainScene {
         this.updateTransformControlAttachment();
         this.minimapNeedsRedraw = true;
         this.emitStateChanged();
-        this.setObjectEditorStatus('Transform applied to selected object.');
+        this.setObjectEditorStatus('变换已应用到选定对象。');
     }
 
     private applyTransformToObjectRecords(
@@ -1813,13 +1813,13 @@ export class TerrainScene {
 
     private async exportCurrentWorldObj() {
         if (!this.loadedObjectsData || this.loadedWorldNumber === null) {
-            this.setObjectEditorStatus('Load a world with OBJ data before export.');
+            this.setObjectEditorStatus('导出前请先加载包含 OBJ 数据的世界。');
             return;
         }
 
         const exportRoot = await openDirectoryDialog();
         if (!exportRoot) {
-            this.setObjectEditorStatus('Export cancelled.');
+            this.setObjectEditorStatus('导出已取消。');
             return;
         }
 
@@ -1831,14 +1831,14 @@ export class TerrainScene {
             const relativePath = `World${this.loadedWorldNumber}/${fileName}`;
             const result = await writeFileInDirectory(exportRoot, relativePath, bytes);
             if (result.error || !result.path) {
-                this.setObjectEditorStatus(`Export failed: ${result.error || 'unknown error'}`);
+                this.setObjectEditorStatus(`导出失败: ${result.error || '未知错误'}`);
                 return;
             }
 
-            this.setObjectEditorStatus(`Exported OBJ: ${result.path}`);
+            this.setObjectEditorStatus(`已导出 OBJ: ${result.path}`);
         } catch (error) {
             console.error('World OBJ export failed:', error);
-            this.setObjectEditorStatus(`Export failed: ${error instanceof Error ? error.message : String(error)}`);
+            this.setObjectEditorStatus(`导出失败: ${error instanceof Error ? error.message : String(error)}`);
         } finally {
             if (this.objectEditorExportBtn) this.objectEditorExportBtn.disabled = false;
         }
@@ -1846,7 +1846,7 @@ export class TerrainScene {
 
     private buildCurrentWorldObjData(): OBJData {
         if (!this.loadedObjectsData) {
-            throw new Error('No OBJ data loaded.');
+            throw new Error('未加载 OBJ 数据。');
         }
 
         const recordsByObjectId = new Map<string, TerrainObjectSelectionRecord>();
@@ -1909,7 +1909,7 @@ export class TerrainScene {
                 scale: record.selection.scale,
             },
         );
-        await this.writeObjectOverrides('Saved object settings');
+        await this.writeObjectOverrides('已保存对象设置');
     }
 
     private async resetSelectedObjectTypeSettings() {
@@ -1933,7 +1933,7 @@ export class TerrainScene {
         this.updateSelectionMarker();
         this.updateTransformControlAttachment();
         this.populateObjectEditorPanel();
-        await this.writeObjectOverrides('Reset object settings');
+        await this.writeObjectOverrides('已重置对象设置');
     }
 
     private applyPersistedObjectTypeOverridesForWorld(worldNumber: number) {
@@ -2003,7 +2003,7 @@ export class TerrainScene {
                 } else {
                     bindingMap.set(key, {
                         key,
-                        label: `${this.getStableMeshMaterialKey(mesh.name)} material ${index + 1}`,
+                        label: `${this.getStableMeshMaterialKey(mesh.name)} 材质 ${index + 1}`,
                         materialSet: new Set([material]),
                     });
                 }
@@ -2419,8 +2419,8 @@ export class TerrainScene {
     private updateTerrainAttributePanel(summary: TerrainAttributeSummary | null) {
         if (this.terrainAttributeStatusEl) {
             this.terrainAttributeStatusEl.textContent = summary
-                ? `ATT loaded for World ${this.loadedWorldNumber ?? '-'}`
-                : 'Load a world to inspect ATT metadata.';
+                ? `已加载世界 ${this.loadedWorldNumber ?? '-'} 的 ATT 数据`
+                : '加载世界以查看 ATT 元数据。';
         }
         if (this.terrainAttributeVersionEl) {
             this.terrainAttributeVersionEl.textContent = summary ? `${summary.version}` : '-';
@@ -2493,7 +2493,7 @@ export class TerrainScene {
 
                 const count = document.createElement('span');
                 count.className = 'terrain-attribute-flag-count';
-                count.textContent = `${entry.count.toLocaleString()} tiles`;
+                count.textContent = `${entry.count.toLocaleString()} 格`;
 
                 topRow.append(name, count);
 

@@ -88,23 +88,23 @@ export class SkillBmdBrowser {
     }
 
     async loadFile(file: File): Promise<void> {
-        if (this.loadStatusEl) this.loadStatusEl.textContent = `Loading ${file.name}…`;
+        if (this.loadStatusEl) this.loadStatusEl.textContent = `正在加载 ${file.name}…`;
         try {
             const buf = await file.arrayBuffer();
             this.skills = parseSkillBmd(buf);
             const count = this.skills.size;
             if (this.loadStatusEl) {
                 this.loadStatusEl.textContent = count > 0
-                    ? `${count} skills loaded from ${file.name}`
-                    : `No skills found in ${file.name}`;
+                    ? `已从 ${file.name} 加载 ${count} 个技能`
+                    : `在 ${file.name} 中未找到技能`;
             }
-            if (this.statusEl) this.statusEl.textContent = `Skills: ${file.name}`;
+            if (this.statusEl) this.statusEl.textContent = `技能: ${file.name}`;
             this.selectedId = null;
             this.applyFilter();
             this.render();
         } catch (err) {
             const msg = err instanceof Error ? err.message : String(err);
-            if (this.loadStatusEl) this.loadStatusEl.textContent = `Failed: ${msg}`;
+            if (this.loadStatusEl) this.loadStatusEl.textContent = `失败: ${msg}`;
         }
     }
 
@@ -117,8 +117,8 @@ export class SkillBmdBrowser {
         const searchInput = document.getElementById('skills-search') as HTMLInputElement | null;
         if (searchInput) searchInput.value = '';
         document.querySelectorAll('.skills-type-btn').forEach((b, i) => b.classList.toggle('active', i === 0));
-        if (this.loadStatusEl) this.loadStatusEl.textContent = 'No file loaded.';
-        if (this.statusEl)     this.statusEl.textContent     = 'Skill Browser';
+        if (this.loadStatusEl) this.loadStatusEl.textContent = '未加载文件。';
+        if (this.statusEl)     this.statusEl.textContent     = '技能浏览器';
         if (this.statsEl)      this.statsEl.textContent      = '';
         this.render();
     }
@@ -172,7 +172,7 @@ export class SkillBmdBrowser {
             const total = this.skills.size;
             this.statsEl.textContent = total === 0
                 ? ''
-                : `${this.filteredIds.length} / ${total} skills`;
+                : `${this.filteredIds.length} / ${total} 个技能`;
         }
     }
 
@@ -229,15 +229,15 @@ export class SkillBmdBrowser {
         if (!s) return;
 
         const req = [
-            s.requiredLevel      ? `Lvl ${s.requiredLevel}`        : '',
-            s.requiredStrength   ? `Str ${s.requiredStrength}`      : '',
-            s.requiredDexterity  ? `Dex ${s.requiredDexterity}`     : '',
-            s.requiredEnergy     ? `Ene ${s.requiredEnergy}`        : '',
-            s.requiredLeadership ? `Cmd ${s.requiredLeadership}`    : '',
-        ].filter(Boolean).join('  ·  ') || '—';
+	            s.requiredLevel      ? `等级 ${s.requiredLevel}`        : '',
+	            s.requiredStrength   ? `力量 ${s.requiredStrength}`      : '',
+	            s.requiredDexterity  ? `敏捷 ${s.requiredDexterity}`     : '',
+	            s.requiredEnergy     ? `精力 ${s.requiredEnergy}`        : '',
+	            s.requiredLeadership ? `统率 ${s.requiredLeadership}`    : '',
+	        ].filter(Boolean).join('  ·  ') || '—';
 
         const reqClass = s.requireClass
-            .map((v, i) => v ? `Class ${i}: ${v}` : '')
+            .map((v, i) => v ? `职业 ${i}: ${v}` : '')
             .filter(Boolean).join(', ') || '—';
 
         this.detailEl.innerHTML = `
@@ -246,22 +246,22 @@ export class SkillBmdBrowser {
                 <span class="bmd-detail-index">#${s.id}</span>
             </div>
             <div class="bmd-detail-grid">
-                <div class="bmd-detail-field"><span class="bmd-df-label">Type</span><span class="bmd-df-val">${s.typeLabel}</span></div>
-                <div class="bmd-detail-field"><span class="bmd-df-label">Use Type</span><span class="bmd-df-val">${s.skillUseTypeLabel}</span></div>
-                <div class="bmd-detail-field"><span class="bmd-df-label">Damage</span><span class="bmd-df-val">${fmtNum(s.damage)}</span></div>
-                <div class="bmd-detail-field"><span class="bmd-df-label">Is Damage</span><span class="bmd-df-val">${s.isDamage ? 'Yes' : 'No'}</span></div>
-                <div class="bmd-detail-field"><span class="bmd-df-label">Mana Cost</span><span class="bmd-df-val">${fmtNum(s.manaCost)}</span></div>
-                <div class="bmd-detail-field"><span class="bmd-df-label">AG Cost</span><span class="bmd-df-val">${fmtNum(s.abilityCost)}</span></div>
-                <div class="bmd-detail-field"><span class="bmd-df-label">Distance</span><span class="bmd-df-val">${fmtNum(s.distance)}</span></div>
-                <div class="bmd-detail-field"><span class="bmd-df-label">Delay</span><span class="bmd-df-val">${fmtMs(s.delay)}</span></div>
-                <div class="bmd-detail-field"><span class="bmd-df-label">Icon ID</span><span class="bmd-df-val">${s.magicIcon}</span></div>
-                <div class="bmd-detail-field"><span class="bmd-df-label">Effect</span><span class="bmd-df-val">${fmtNum(s.effect)}</span></div>
-                <div class="bmd-detail-field"><span class="bmd-df-label">Rank</span><span class="bmd-df-val">${s.skillRank}</span></div>
-                <div class="bmd-detail-field"><span class="bmd-df-label">Mastery</span><span class="bmd-df-val">${s.masteryType}</span></div>
-                <div class="bmd-detail-field"><span class="bmd-df-label">Brand</span><span class="bmd-df-val">${s.skillBrand}</span></div>
-                <div class="bmd-detail-field"><span class="bmd-df-label">Item Skill</span><span class="bmd-df-val">${s.itemSkill}</span></div>
-                <div class="bmd-detail-field bmd-detail-field--wide"><span class="bmd-df-label">Requirements</span><span class="bmd-df-val">${req}</span></div>
-                <div class="bmd-detail-field bmd-detail-field--wide"><span class="bmd-df-label">Class Reqs</span><span class="bmd-df-val">${reqClass}</span></div>
+                <div class="bmd-detail-field"><span class="bmd-df-label">类型</span><span class="bmd-df-val">${s.typeLabel}</span></div>
+                <div class="bmd-detail-field"><span class="bmd-df-label">使用类型</span><span class="bmd-df-val">${s.skillUseTypeLabel}</span></div>
+                <div class="bmd-detail-field"><span class="bmd-df-label">伤害</span><span class="bmd-df-val">${fmtNum(s.damage)}</span></div>
+                <div class="bmd-detail-field"><span class="bmd-df-label">是否伤害</span><span class="bmd-df-val">${s.isDamage ? '是' : '否'}</span></div>
+                <div class="bmd-detail-field"><span class="bmd-df-label">魔法消耗</span><span class="bmd-df-val">${fmtNum(s.manaCost)}</span></div>
+                <div class="bmd-detail-field"><span class="bmd-df-label">AG 消耗</span><span class="bmd-df-val">${fmtNum(s.abilityCost)}</span></div>
+                <div class="bmd-detail-field"><span class="bmd-df-label">距离</span><span class="bmd-df-val">${fmtNum(s.distance)}</span></div>
+                <div class="bmd-detail-field"><span class="bmd-df-label">延迟</span><span class="bmd-df-val">${fmtMs(s.delay)}</span></div>
+                <div class="bmd-detail-field"><span class="bmd-df-label">图标 ID</span><span class="bmd-df-val">${s.magicIcon}</span></div>
+                <div class="bmd-detail-field"><span class="bmd-df-label">效果</span><span class="bmd-df-val">${fmtNum(s.effect)}</span></div>
+                <div class="bmd-detail-field"><span class="bmd-df-label">等级</span><span class="bmd-df-val">${s.skillRank}</span></div>
+                <div class="bmd-detail-field"><span class="bmd-df-label">精通</span><span class="bmd-df-val">${s.masteryType}</span></div>
+                <div class="bmd-detail-field"><span class="bmd-df-label">品牌</span><span class="bmd-df-val">${s.skillBrand}</span></div>
+                <div class="bmd-detail-field"><span class="bmd-df-label">物品技能</span><span class="bmd-df-val">${s.itemSkill}</span></div>
+                <div class="bmd-detail-field bmd-detail-field--wide"><span class="bmd-df-label">需求</span><span class="bmd-df-val">${req}</span></div>
+                <div class="bmd-detail-field bmd-detail-field--wide"><span class="bmd-df-label">职业需求</span><span class="bmd-df-val">${reqClass}</span></div>
             </div>`;
     }
 }

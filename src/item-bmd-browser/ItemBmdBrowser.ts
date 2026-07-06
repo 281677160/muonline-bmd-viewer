@@ -5,16 +5,16 @@ import { parseItemBmd, type ItemDefinition } from '../item-bmd';
 // Helpers
 // ------------------------------------------------------------------
 const KIND_A_LABELS: Record<number, string> = {
-    0: 'Weapon',
-    1: 'Armor',
-    2: 'Potion',
-    3: 'Scroll',
-    4: 'Jewel',
-    5: 'Misc',
-};
+	    0: '武器',
+	    1: '护甲',
+	    2: '药水',
+	    3: '卷轴',
+	    4: '宝石',
+	    5: '杂项',
+	};
 
 function kindLabel(kindA: number): string {
-    return KIND_A_LABELS[kindA] ?? `Kind ${kindA}`;
+    return KIND_A_LABELS[kindA] ?? `类别 ${kindA}`;
 }
 
 function fmtReq(v: number): string {
@@ -106,22 +106,22 @@ export class ItemBmdBrowser {
     }
 
     async loadFile(file: File): Promise<void> {
-        if (this.loadStatusEl) this.loadStatusEl.textContent = `Loading ${file.name}…`;
+        if (this.loadStatusEl) this.loadStatusEl.textContent = `正在加载 ${file.name}…`;
         try {
             const buf = await file.arrayBuffer();
             this.items = parseItemBmd(buf);
             if (this.loadStatusEl) {
                 this.loadStatusEl.textContent = this.items.length > 0
-                    ? `${this.items.length} items loaded from ${file.name}`
-                    : `No items found in ${file.name}`;
+                    ? `已从 ${file.name} 加载 ${this.items.length} 个物品`
+                    : `在 ${file.name} 中未找到物品`;
             }
-            if (this.statusEl) this.statusEl.textContent = `Items: ${file.name}`;
+            if (this.statusEl) this.statusEl.textContent = `物品: ${file.name}`;
             this.selected = null;
             this.applyFilter();
             this.render();
         } catch (err) {
             const msg = err instanceof Error ? err.message : String(err);
-            if (this.loadStatusEl) this.loadStatusEl.textContent = `Failed: ${msg}`;
+            if (this.loadStatusEl) this.loadStatusEl.textContent = `失败: ${msg}`;
         }
     }
 
@@ -134,8 +134,8 @@ export class ItemBmdBrowser {
         const searchInput = document.getElementById('items-search') as HTMLInputElement | null;
         if (searchInput) searchInput.value = '';
         document.querySelectorAll('.items-kind-btn').forEach((b, i) => b.classList.toggle('active', i === 0));
-        if (this.loadStatusEl) this.loadStatusEl.textContent = 'No file loaded.';
-        if (this.statusEl)     this.statusEl.textContent     = 'Item Browser';
+        if (this.loadStatusEl) this.loadStatusEl.textContent = '未加载文件。';
+        if (this.statusEl)     this.statusEl.textContent     = '物品浏览器';
         if (this.statsEl)      this.statsEl.textContent      = '';
         this.render();
     }
@@ -184,7 +184,7 @@ export class ItemBmdBrowser {
         if (this.statsEl) {
             this.statsEl.textContent = this.items.length === 0
                 ? ''
-                : `${this.filtered.length} / ${this.items.length} items`;
+                : `${this.filtered.length} / ${this.items.length} 个物品`;
         }
     }
 
@@ -237,13 +237,13 @@ export class ItemBmdBrowser {
         const d = this.selected;
 
         const req = [
-            d.reqStr  ? `Str ${d.reqStr}`  : '',
-            d.reqDex  ? `Dex ${d.reqDex}`  : '',
-            d.reqEne  ? `Ene ${d.reqEne}`  : '',
-            d.reqVit  ? `Vit ${d.reqVit}`  : '',
-            d.reqCmd  ? `Cmd ${d.reqCmd}`  : '',
-            d.reqLvl  ? `Lvl ${d.reqLvl}`  : '',
-        ].filter(Boolean).join('  ·  ') || '—';
+	            d.reqStr  ? `力量 ${d.reqStr}`  : '',
+	            d.reqDex  ? `敏捷 ${d.reqDex}`  : '',
+	            d.reqEne  ? `精力 ${d.reqEne}`  : '',
+	            d.reqVit  ? `体力 ${d.reqVit}`  : '',
+	            d.reqCmd  ? `统率 ${d.reqCmd}`  : '',
+	            d.reqLvl  ? `等级 ${d.reqLvl}`  : '',
+	        ].filter(Boolean).join('  ·  ') || '—';
 
         const classBits: string[] = [];
         // class flags are stored but we just show raw group/id
@@ -251,26 +251,26 @@ export class ItemBmdBrowser {
 
         this.detailEl.innerHTML = `
             <div class="bmd-detail-header">
-                <span class="bmd-detail-name">${d.itemName || '(unnamed)'}</span>
+                <span class="bmd-detail-name">${d.itemName || '(未命名)'}</span>
                 <span class="bmd-detail-index">#${d.index}</span>
             </div>
             <div class="bmd-detail-grid">
-                <div class="bmd-detail-field"><span class="bmd-df-label">Model</span><span class="bmd-df-val">${d.modelPath || '—'}</span></div>
-                <div class="bmd-detail-field"><span class="bmd-df-label">Group / ID</span><span class="bmd-df-val">${groupId}</span></div>
-                <div class="bmd-detail-field"><span class="bmd-df-label">Kind A / B</span><span class="bmd-df-val">${d.kindA} / ${d.kindB}</span></div>
-                <div class="bmd-detail-field"><span class="bmd-df-label">Type</span><span class="bmd-df-val">${d.type}</span></div>
-                <div class="bmd-detail-field"><span class="bmd-df-label">Two-Hands</span><span class="bmd-df-val">${d.twoHands ? 'Yes' : 'No'}</span></div>
-                <div class="bmd-detail-field"><span class="bmd-df-label">Size</span><span class="bmd-df-val">${d.width} × ${d.height}</span></div>
-                <div class="bmd-detail-field"><span class="bmd-df-label">Damage</span><span class="bmd-df-val">${fmtDmg(d)}</span></div>
-                <div class="bmd-detail-field"><span class="bmd-df-label">Defense</span><span class="bmd-df-val">${fmtDef(d)}</span></div>
-                <div class="bmd-detail-field"><span class="bmd-df-label">Def Rate</span><span class="bmd-df-val">${d.defenseRate || '—'}</span></div>
-                <div class="bmd-detail-field"><span class="bmd-df-label">Atk Speed</span><span class="bmd-df-val">${d.attackSpeed || '—'}</span></div>
-                <div class="bmd-detail-field"><span class="bmd-df-label">Durability</span><span class="bmd-df-val">${d.durability || '—'}</span></div>
-                <div class="bmd-detail-field"><span class="bmd-df-label">Drop Lvl</span><span class="bmd-df-val">${d.dropLevel || '—'}</span></div>
-                <div class="bmd-detail-field bmd-detail-field--wide"><span class="bmd-df-label">Requirements</span><span class="bmd-df-val">${req}</span></div>
-                <div class="bmd-detail-field"><span class="bmd-df-label">Skill</span><span class="bmd-df-val">${d.skillIndex > 0 ? d.skillIndex : '—'}</span></div>
-                <div class="bmd-detail-field"><span class="bmd-df-label">Value</span><span class="bmd-df-val">${d.itemValue.toLocaleString()}</span></div>
-                <div class="bmd-detail-field"><span class="bmd-df-label">Price</span><span class="bmd-df-val">${d.money.toLocaleString()}</span></div>
+                <div class="bmd-detail-field"><span class="bmd-df-label">模型</span><span class="bmd-df-val">${d.modelPath || '—'}</span></div>
+                <div class="bmd-detail-field"><span class="bmd-df-label">组 / ID</span><span class="bmd-df-val">${groupId}</span></div>
+                <div class="bmd-detail-field"><span class="bmd-df-label">类别 A / B</span><span class="bmd-df-val">${d.kindA} / ${d.kindB}</span></div>
+                <div class="bmd-detail-field"><span class="bmd-df-label">类型</span><span class="bmd-df-val">${d.type}</span></div>
+                <div class="bmd-detail-field"><span class="bmd-df-label">双手</span><span class="bmd-df-val">${d.twoHands ? '是' : '否'}</span></div>
+                <div class="bmd-detail-field"><span class="bmd-df-label">大小</span><span class="bmd-df-val">${d.width} × ${d.height}</span></div>
+                <div class="bmd-detail-field"><span class="bmd-df-label">伤害</span><span class="bmd-df-val">${fmtDmg(d)}</span></div>
+                <div class="bmd-detail-field"><span class="bmd-df-label">防御</span><span class="bmd-df-val">${fmtDef(d)}</span></div>
+                <div class="bmd-detail-field"><span class="bmd-df-label">防御率</span><span class="bmd-df-val">${d.defenseRate || '—'}</span></div>
+                <div class="bmd-detail-field"><span class="bmd-df-label">攻击速度</span><span class="bmd-df-val">${d.attackSpeed || '—'}</span></div>
+                <div class="bmd-detail-field"><span class="bmd-df-label">耐久度</span><span class="bmd-df-val">${d.durability || '—'}</span></div>
+                <div class="bmd-detail-field"><span class="bmd-df-label">掉落等级</span><span class="bmd-df-val">${d.dropLevel || '—'}</span></div>
+                <div class="bmd-detail-field bmd-detail-field--wide"><span class="bmd-df-label">需求</span><span class="bmd-df-val">${req}</span></div>
+                <div class="bmd-detail-field"><span class="bmd-df-label">技能</span><span class="bmd-df-val">${d.skillIndex > 0 ? d.skillIndex : '—'}</span></div>
+                <div class="bmd-detail-field"><span class="bmd-df-label">数值</span><span class="bmd-df-val">${d.itemValue.toLocaleString()}</span></div>
+                <div class="bmd-detail-field"><span class="bmd-df-label">价格</span><span class="bmd-df-val">${d.money.toLocaleString()}</span></div>
             </div>`;
     }
 }

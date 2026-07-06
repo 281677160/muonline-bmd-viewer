@@ -136,8 +136,8 @@ export class OzjBrowser {
         if (ozFiles.length === 0 || this.isLoading) return;
         this.isLoading = true;
 
-        if (this.loadStatusEl) this.loadStatusEl.textContent = `Loading ${ozFiles.length} file(s)…`;
-        if (this.statusEl)     this.statusEl.textContent     = 'Loading…';
+        if (this.loadStatusEl) this.loadStatusEl.textContent = `正在加载 ${ozFiles.length} 个文件…`;
+        if (this.statusEl)     this.statusEl.textContent     = '加载中…';
 
         let loaded = 0;
         let failed = 0;
@@ -170,8 +170,8 @@ export class OzjBrowser {
         this.entries.push(...newEntries);
 
         const msg = failed > 0
-            ? `Loaded ${loaded} file(s), ${failed} failed.`
-            : `${this.entries.length} file(s) loaded.`;
+	            ? `已加载 ${loaded} 个文件，${failed} 个失败。`
+	            : `已加载 ${this.entries.length} 个文件。`;
         if (this.loadStatusEl) this.loadStatusEl.textContent = msg;
 
         this.isLoading = false;
@@ -189,8 +189,8 @@ export class OzjBrowser {
         // reset format filter buttons
         document.querySelectorAll('.ozj-filter-btn').forEach((b, i) => b.classList.toggle('active', i === 0));
         this.formatFilter = 'all';
-        if (this.loadStatusEl) this.loadStatusEl.textContent = 'No files loaded.';
-        if (this.statusEl)     this.statusEl.textContent     = 'OZJ Browser';
+        if (this.loadStatusEl) this.loadStatusEl.textContent = '未加载文件。';
+        if (this.statusEl)     this.statusEl.textContent     = 'OZJ 浏览器';
         if (this.statsEl)      this.statsEl.textContent      = '';
         this.render();
     }
@@ -245,10 +245,10 @@ export class OzjBrowser {
             }
             const ozjCount = this.entries.filter(e => e.format === 'OZJ').length;
             const oztCount = this.entries.filter(e => e.format === 'OZT').length;
-            this.statsEl.textContent = `${this.entries.length} total · ${ozjCount} OZJ · ${oztCount} OZT`;
+            this.statsEl.textContent = `${this.entries.length} 总计 · ${ozjCount} OZJ · ${oztCount} OZT`;
         }
         if (this.statusEl && this.entries.length > 0) {
-            this.statusEl.textContent = `${this.filteredEntries.length} / ${this.entries.length} images`;
+            this.statusEl.textContent = `${this.filteredEntries.length} / ${this.entries.length} 张图片`;
         }
     }
 
@@ -308,8 +308,8 @@ export class OzjBrowser {
             const empty = document.createElement('div');
             empty.className   = 'ozj-grid-empty';
             empty.textContent = (this.searchQuery || this.formatFilter !== 'all')
-                ? 'No files match the filter.'
-                : 'No files loaded.';
+                ? '没有匹配的文件。'
+                : '未加载文件。';
             this.gridEl.appendChild(empty);
             return;
         }

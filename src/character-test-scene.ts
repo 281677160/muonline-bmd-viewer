@@ -24,62 +24,62 @@ import gifWorkerUrl from 'gif.js/dist/gif.worker.js?url';
 const TEXTURE_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.tga', '.ozj', '.ozt'];
 
 const CLASS_OPTIONS: Array<{ value: number; label: string }> = [
-  { value: 1, label: 'Dark Wizard' },
-  { value: 201, label: 'Soul Master' },
-  { value: 301, label: 'Grand Master' },
-  { value: 401, label: 'Soul Wizard' },
-  { value: 2, label: 'Dark Knight' },
-  { value: 202, label: 'Blade Knight' },
-  { value: 302, label: 'Blade Master' },
-  { value: 402, label: 'Dragon Knight' },
-  { value: 3, label: 'Fairy Elf' },
-  { value: 203, label: 'Muse Elf' },
-  { value: 303, label: 'High Elf' },
-  { value: 403, label: 'Noble Elf' },
-  { value: 4, label: 'Magic Gladiator' },
-  { value: 304, label: 'Duel Master' },
-  { value: 404, label: 'Magic Knight' },
-  { value: 5, label: 'Dark Lord' },
-  { value: 305, label: 'Lord Emperor' },
-  { value: 405, label: 'Empire Lord' },
-  { value: 6, label: 'Summoner' },
-  { value: 206, label: 'Bloody Summoner' },
-  { value: 306, label: 'Dimension Master' },
-  { value: 406, label: 'Dimension Summoner' },
-  { value: 7, label: 'Rage Fighter' },
-  { value: 307, label: 'Fist Master' },
-  { value: 407, label: 'Fist Blazer' },
-  { value: 8, label: 'Glow Lancer' },
-  { value: 308, label: 'Mirage Lancer' },
-  { value: 408, label: 'Shining Lancer' },
-  { value: 9, label: 'Rune Mage' },
-  { value: 209, label: 'Rune Spell Master' },
-  { value: 309, label: 'Grand Rune Master' },
-  { value: 409, label: 'Majestic Rune Wizard' },
-  { value: 10, label: 'Slayer' },
-  { value: 210, label: 'Royal Slayer' },
-  { value: 310, label: 'Master Slayer' },
-  { value: 410, label: 'Slaughterer' },
-  { value: 11, label: 'Gun Crusher' },
-  { value: 211, label: 'Gun Breaker' },
-  { value: 311, label: 'Master Gun Breaker' },
-  { value: 411, label: 'Heist Gun Crasher' },
-  { value: 12, label: 'White Wizard' },
-  { value: 212, label: 'Light Master' },
-  { value: 312, label: 'Shine Wizard' },
-  { value: 412, label: 'Shine Master' },
-  { value: 13, label: 'Mage' },
-  { value: 213, label: 'Wo Mage' },
-  { value: 313, label: 'Arch Mage' },
-  { value: 413, label: 'Mystic Mage' },
-  { value: 14, label: 'Illusion Knight' },
-  { value: 214, label: 'Mirage Knight' },
-  { value: 314, label: 'Illusion Master' },
-  { value: 414, label: 'Mystic Knight' },
-  { value: 15, label: 'Alchemist' },
-  { value: 215, label: 'Alchemic Master' },
-  { value: 315, label: 'Alchemic Force' },
-  { value: 415, label: 'Creator' },
+  { value: 1, label: '魔导师' },
+  { value: 201, label: '灵魂法师' },
+  { value: 301, label: '大魔导师' },
+  { value: 401, label: '灵魂巫师' },
+  { value: 2, label: '暗黑骑士' },
+  { value: 202, label: '魔剑士' },
+  { value: 302, label: '剑圣' },
+  { value: 402, label: '龙骑士' },
+  { value: 3, label: '精灵' },
+  { value: 203, label: '圣射手' },
+  { value: 303, label: '神射手' },
+  { value: 403, label: '高贵精灵' },
+  { value: 4, label: '魔剑士' },
+  { value: 304, label: '决战师' },
+  { value: 404, label: '魔剑骑士' },
+  { value: 5, label: '暗黑领主' },
+  { value: 305, label: '帝王' },
+  { value: 405, label: '帝国领主' },
+  { value: 6, label: '召唤师' },
+  { value: 206, label: '血色召唤师' },
+  { value: 306, label: '次元大师' },
+  { value: 406, label: '次元召唤师' },
+  { value: 7, label: '格斗家' },
+  { value: 307, label: '拳圣' },
+  { value: 407, label: '拳焰师' },
+  { value: 8, label: '光辉枪兵' },
+  { value: 308, label: '幻影枪兵' },
+  { value: 408, label: '闪耀枪兵' },
+  { value: 9, label: '符文法师' },
+  { value: 209, label: '符文大师' },
+  { value: 309, label: '大符文师' },
+  { value: 409, label: '威严符文师' },
+  { value: 10, label: '屠戮者' },
+  { value: 210, label: '皇家屠戮者' },
+  { value: 310, label: '屠戮大师' },
+  { value: 410, label: '屠杀者' },
+  { value: 11, label: '枪炮破坏者' },
+  { value: 211, label: '枪炮粉碎者' },
+  { value: 311, label: '枪炮大师' },
+  { value: 411, label: '劫掠枪手' },
+  { value: 12, label: '白魔导' },
+  { value: 212, label: '光明大师' },
+  { value: 312, label: '闪耀巫师' },
+  { value: 412, label: '闪耀大师' },
+  { value: 13, label: '法师' },
+  { value: 213, label: '次元法师' },
+  { value: 313, label: '大法师' },
+  { value: 413, label: '秘法法师' },
+  { value: 14, label: '幻影骑士' },
+  { value: 214, label: '幻象骑士' },
+  { value: 314, label: '幻影大师' },
+  { value: 414, label: '秘影骑士' },
+  { value: 15, label: '炼金术士' },
+  { value: 215, label: '炼金大师' },
+  { value: 315, label: '炼金之力' },
+  { value: 415, label: '造物主' },
 ];
 
 function normalizeDataPath(path: string): string {
@@ -319,7 +319,7 @@ export class CharacterTestScene {
     this.bgColorInput.value = state.backgroundColor;
     this.setSceneBackground(state.backgroundColor);
     this.brightnessSlider.value = `${state.brightness}`;
-    this.brightnessLabel.textContent = `Brightness: ${state.brightness.toFixed(2)}×`;
+    this.brightnessLabel.textContent = `亮度: ${state.brightness.toFixed(2)}×`;
     this.setBrightness(state.brightness);
     this.applyPendingSessionState();
     this.emitStateChanged();
@@ -329,7 +329,7 @@ export class CharacterTestScene {
     const trimmedName = name.trim();
     if (!trimmedName) {
       if (this.presetStatusEl) {
-        this.presetStatusEl.textContent = 'Enter a preset name.';
+        this.presetStatusEl.textContent = '请输入预设名称。';
       }
       return null;
     }
@@ -580,12 +580,12 @@ export class CharacterTestScene {
 
     this.brightnessSlider.addEventListener('input', e => {
       const value = parseFloat((e.target as HTMLInputElement).value);
-      this.brightnessLabel.textContent = `Brightness: ${value.toFixed(2)}×`;
+      this.brightnessLabel.textContent = `亮度: ${value.toFixed(2)}×`;
       this.setBrightness(value);
       this.emitStateChanged();
     });
     const initialBrightness = parseFloat(this.brightnessSlider.value) || 2.0;
-    this.brightnessLabel.textContent = `Brightness: ${initialBrightness.toFixed(2)}×`;
+    this.brightnessLabel.textContent = `亮度: ${initialBrightness.toFixed(2)}×`;
     this.setBrightness(initialBrightness);
 
     this.populateClassSelect();
@@ -626,7 +626,7 @@ export class CharacterTestScene {
         this.presetNameInput.value = '';
       }
       if (this.presetStatusEl) {
-        this.presetStatusEl.textContent = `Saved preset "${preset.name}".`;
+        this.presetStatusEl.textContent = `已保存预设 "${preset.name}"。`;
       }
     });
   }
@@ -677,8 +677,8 @@ export class CharacterTestScene {
   }
 
   private async loadDataFolder(source: string | File[]) {
-    this.dataStatus.textContent = 'Loading Data folder...';
-    this.statusEl.textContent = 'Loading Data folder...';
+    this.dataStatus.textContent = '正在加载数据文件夹...';
+    this.statusEl.textContent = '正在加载数据文件夹...';
 
     this.dataFiles.clear();
     this.textureIndex.clear();
@@ -695,20 +695,20 @@ export class CharacterTestScene {
       this.dataRootPath = source;
       const ok = await this.loadItemDatabase();
       if (ok) {
-        this.dataStatus.textContent = `Loaded Data folder: ${source}`;
-        this.statusEl.textContent = 'Item database loaded.';
+        this.dataStatus.textContent = `已加载数据文件夹: ${source}`;
+        this.statusEl.textContent = '物品数据库已加载。';
         this.applyPendingSessionState();
         this.scheduleRebuild();
       } else {
-        this.dataStatus.textContent = 'Failed to load item.bmd from Data folder.';
-        this.statusEl.textContent = 'Missing Data/Local/item.bmd';
+        this.dataStatus.textContent = '无法从数据文件夹加载 item.bmd。';
+        this.statusEl.textContent = '缺少 Data/Local/item.bmd';
       }
       return;
     }
 
     const files = source;
     if (!files.length) {
-      this.dataStatus.textContent = 'No files selected.';
+      this.dataStatus.textContent = '未选择文件。';
       return;
     }
 
@@ -732,13 +732,13 @@ export class CharacterTestScene {
 
     const ok = await this.loadItemDatabase();
     if (ok) {
-      this.dataStatus.textContent = `Loaded Data folder (${files.length} files)`;
-      this.statusEl.textContent = 'Item database loaded.';
+      this.dataStatus.textContent = `已加载数据文件夹（${files.length} 个文件）`;
+      this.statusEl.textContent = '物品数据库已加载。';
       this.applyPendingSessionState();
       this.scheduleRebuild();
     } else {
-      this.dataStatus.textContent = 'Failed to load item.bmd from Data folder.';
-      this.statusEl.textContent = 'Missing Data/Local/item.bmd';
+      this.dataStatus.textContent = '无法从数据文件夹加载 item.bmd。';
+      this.statusEl.textContent = '缺少 Data/Local/item.bmd';
     }
   }
 
@@ -843,7 +843,7 @@ export class CharacterTestScene {
   private async rebuildCharacter() {
     const token = ++this.buildToken;
 
-    this.statusEl.textContent = 'Building character...';
+    this.statusEl.textContent = '正在构建角色...';
 
     const classValue = parseInt(this.classSelect.value, 10);
     const classId = resolveClassModelId(classValue);
@@ -861,7 +861,7 @@ export class CharacterTestScene {
     const baseArmorPath = `Player/ArmorClass${classToken}.bmd`;
     const baseGroup = await this.loadBmdGroup(baseArmorPath);
     if (!baseGroup || token !== this.buildToken) {
-      this.statusEl.textContent = `Missing base model: ${baseArmorPath}`;
+      this.statusEl.textContent = `缺少基础模型: ${baseArmorPath}`;
       return;
     }
 
@@ -880,7 +880,7 @@ export class CharacterTestScene {
 
     this.baseSkeleton = this.findSkeleton(this.characterRoot);
     if (!this.baseSkeleton) {
-      this.statusEl.textContent = 'No skeleton found in base model.';
+      this.statusEl.textContent = '基础模型中未找到骨骼。';
       return;
     }
     this.baseBmdBones = this.getBmdBones(this.characterRoot);
@@ -990,7 +990,7 @@ export class CharacterTestScene {
     this.buildBlendingUI();
     this.refreshRenderHelpers();
     this.updateStageForObject(this.characterRoot);
-    this.statusEl.textContent = 'Character ready.';
+    this.statusEl.textContent = '角色已就绪。';
     this.emitStateChanged();
   }
 
@@ -1622,7 +1622,7 @@ export class CharacterTestScene {
     for (let i = 0; i < count; i++) {
       const option = document.createElement('option');
       option.value = i.toString();
-      option.textContent = `Animation ${i}`;
+      option.textContent = `动画 ${i}`;
       this.animationSelect.appendChild(option);
     }
     if (count > 0) {
@@ -1985,13 +1985,13 @@ export class CharacterTestScene {
   private exportGif() {
     if (this.isRecordingGif) return;
     if (!this.characterRoot) {
-      alert('Load a character first.');
+      alert('请先加载角色。');
       return;
     }
 
     this.isRecordingGif = true;
     this.exportGifBtn.disabled = true;
-    this.statusEl.textContent = 'Recording GIF…';
+    this.statusEl.textContent = '正在录制 GIF…';
 
     const w = Math.max(16, Math.min(1024, parseInt(this.gifWidthInput?.value ?? '800', 10) || 800));
     const h = Math.max(16, Math.min(1024, parseInt(this.gifHeightInput?.value ?? '600', 10) || 600));
@@ -2039,7 +2039,7 @@ export class CharacterTestScene {
     if (this.gridHelper) this.gridHelper.visible = false;
 
     gif.on('progress', (p: number) => {
-      this.statusEl.textContent = `Rendering GIF… ${(p * 100).toFixed(0)}%`;
+      this.statusEl.textContent = `正在渲染 GIF… ${(p * 100).toFixed(0)}%`;
     });
 
     const finish = (message: string) => {

@@ -261,7 +261,7 @@ class App {
         }
         if (brightnessSlider && brightnessLabel) {
             brightnessSlider.value = `${state.brightness}`;
-            brightnessLabel.textContent = `Brightness: ${state.brightness.toFixed(2)}×`;
+            brightnessLabel.textContent = `亮度: ${state.brightness.toFixed(2)}×`;
             this.setBrightness(state.brightness);
         }
         if (skeletonHelper) skeletonHelper.visible = showSkeletonEl.checked;
@@ -469,12 +469,12 @@ class App {
         }
 
         const preferred = this.rendererBackendPreference === 'auto'
-            ? 'Auto'
+            ? '自动'
             : this.rendererBackendPreference === 'webgpu'
                 ? 'WebGPU'
                 : 'WebGL';
         const active = this.rendererActiveBackend === 'webgpu' ? 'WebGPU' : 'WebGL';
-        this.rendererBackendStatusEl.textContent = `Renderer: ${active} active (preferred: ${preferred})`;
+        this.rendererBackendStatusEl.textContent = `渲染器：${active} 已激活（偏好：${preferred}）`;
     }
 
     private async reloadCurrentModelAfterRendererSwitchWithAssets(
@@ -489,7 +489,7 @@ class App {
         const attachBoneSelect = document.getElementById('attach-bone-select') as HTMLSelectElement | null;
         const statusEl = document.getElementById('status');
         if (statusEl) {
-            statusEl.textContent = 'Renderer changed. Rebuilding model resources…';
+            statusEl.textContent = '渲染器已切换，正在重建模型资源…';
         }
 
         await this.loadAndDisplayModel({
@@ -546,7 +546,7 @@ class App {
 
         this.rendererReady = false;
         this.userIsInteracting = false;
-        this.updateRendererBackendStatus(`Renderer: switching to ${preference === 'auto' ? 'Auto' : preference}…`);
+        this.updateRendererBackendStatus(`渲染器：正在切换到 ${preference === 'auto' ? '自动' : preference}…`);
 
         if (shouldReloadModel) {
             this.clearScene();
@@ -565,7 +565,7 @@ class App {
             try {
                 await renderer.init();
             } catch (error) {
-                fallbackReason = error instanceof Error ? error.message : 'WebGPU initialization failed';
+                fallbackReason = error instanceof Error ? error.message : 'WebGPU 初始化失败';
                 renderer.dispose();
                 renderer = this.createClassicWebGLRenderer();
                 this.configureRendererInstance(renderer);
@@ -598,9 +598,9 @@ class App {
 
         if (announceStatus) {
             if (fallbackReason) {
-                this.setStatusMessage(`WebGPU init failed, using WebGL. ${fallbackReason}`);
+                this.setStatusMessage(`WebGPU 初始化失败，使用 WebGL。${fallbackReason}`);
             } else if (preference !== 'webgl') {
-                this.setStatusMessage(`Renderer backend: ${this.rendererActiveBackend === 'webgpu' ? 'WebGPU' : 'WebGL fallback'} ready.`);
+                this.setStatusMessage(`渲染后端：${this.rendererActiveBackend === 'webgpu' ? 'WebGPU' : 'WebGL 回退'}已就绪。`);
             }
         }
 
@@ -657,7 +657,7 @@ class App {
         
         speedSlider.addEventListener('input', (e) => {
             const speed = parseFloat((e.target as HTMLInputElement).value);
-            speedLabel.textContent = `Speed: ${speed.toFixed(2)}x`;
+            speedLabel.textContent = `速度: ${speed.toFixed(2)}x`;
             if (speedValue) {
                 speedValue.textContent = `${speed.toFixed(2)}x`;
             }
@@ -666,7 +666,7 @@ class App {
         });
         const initialAnimationSpeed = parseFloat(speedSlider.value) || DEFAULT_ANIMATION_PLAYBACK_SPEED;
         speedSlider.value = `${initialAnimationSpeed}`;
-        speedLabel.textContent = `Speed: ${initialAnimationSpeed.toFixed(2)}x`;
+        speedLabel.textContent = `速度: ${initialAnimationSpeed.toFixed(2)}x`;
         if (speedValue) {
             speedValue.textContent = `${initialAnimationSpeed.toFixed(2)}x`;
         }
@@ -695,7 +695,7 @@ class App {
         this.updateRendererBackendStatus();
 
         const status = document.getElementById('status')!;
-        status.textContent = 'Waiting for BMD file…';
+        status.textContent = '等待 BMD 文件…';
 
         this.initScaleSlider();
 
@@ -721,12 +721,12 @@ class App {
         const brightLabel  = document.getElementById('brightness-label')!;
         brightSlider.addEventListener('input', e => {
             const v = parseFloat((e.target as HTMLInputElement).value);
-            brightLabel.textContent = `Brightness: ${v.toFixed(2)}×`;
+            brightLabel.textContent = `亮度: ${v.toFixed(2)}×`;
             this.setBrightness(v);
             this.emitStateChanged();
         });
         const initialBrightness = parseFloat(brightSlider.value) || 2.0;
-        brightLabel.textContent = `Brightness: ${initialBrightness.toFixed(2)}×`;
+        brightLabel.textContent = `亮度: ${initialBrightness.toFixed(2)}×`;
         this.setBrightness(initialBrightness);
 
         // ### NEW ### Diagnostic elements
@@ -860,7 +860,7 @@ class App {
                         const fileData = await readFileFromPath(filePath);
                         if (fileData) {
                             const file = createFileFromElectronData(fileData.name, fileData.data);
-                            document.querySelector('#attach-drop-zone p')!.textContent = `Selected: ${file.name}`;
+                            document.querySelector('#attach-drop-zone p')!.textContent = `已选择: ${file.name}`;
                             this.currentAttachmentFile = file;
                             this.lastAttachmentFilePath = filePath;
                             this.setupAttachmentControls();
@@ -894,7 +894,7 @@ class App {
                         }
                     }
 
-                    document.querySelector('#attach-drop-zone p')!.textContent = `Selected: ${file.name}`;
+                    document.querySelector('#attach-drop-zone p')!.textContent = `已选择: ${file.name}`;
                     this.currentAttachmentFile = file;
                     this.lastAttachmentFilePath = filePath || null;
                     this.setupAttachmentControls();
@@ -913,7 +913,7 @@ class App {
                 const list = (e.target as HTMLInputElement).files;
                 if (list?.length) {
                     const file = list[0];
-                    document.querySelector('#attach-drop-zone p')!.textContent = `Selected: ${file.name}`;
+                    document.querySelector('#attach-drop-zone p')!.textContent = `已选择: ${file.name}`;
                     this.currentAttachmentFile = file;
                     this.lastAttachmentFilePath = null; // No path in browser
                     this.setupAttachmentControls();
@@ -1052,13 +1052,13 @@ class App {
                                                                                 
        scaleSlider.addEventListener('input', (e) => {                                     
        const scale = parseFloat((e.target as HTMLInputElement).value);               
-        scaleLabel.textContent = `Scale: ${scale.toFixed(2)}x`;                       
+        scaleLabel.textContent = `缩放: ${scale.toFixed(2)}x`;                       
         if (scaleValue) {
             scaleValue.textContent = `${scale.toFixed(2)}x`;
         }
        this.setModelScale(scale);                                                     
         });                                                                               
-        scaleLabel.textContent = `Scale: ${parseFloat(scaleSlider.value).toFixed(2)}x`;   
+        scaleLabel.textContent = `缩放: ${parseFloat(scaleSlider.value).toFixed(2)}x`;   
         if (scaleValue) {
             scaleValue.textContent = `${parseFloat(scaleSlider.value).toFixed(2)}x`;
         }
@@ -1152,7 +1152,7 @@ class App {
             this.bmdFile = file;
             this.lastBmdFilePath = filePath || null;  // Store file path for Electron texture search
             this.appliedTextureFiles.clear();
-            document.querySelector('#bmd-drop-zone p')!.textContent = `Selected: ${file.name}`;
+            document.querySelector('#bmd-drop-zone p')!.textContent = `已选择: ${file.name}`;
             await this.loadAndDisplayModel({ textureFiles });
         } catch (error) {
             if (error instanceof FileValidationError) {
@@ -1167,7 +1167,7 @@ class App {
     private handleAnimBmdFile = (file: File) => {
         logger.debug(`[App] handleAnimBmdFile("${file.name}")`);
         this.animBmdFile = file;
-        document.querySelector('#anim-bmd-drop-zone p')!.textContent = `Selected: ${file.name}`;
+        document.querySelector('#anim-bmd-drop-zone p')!.textContent = `已选择: ${file.name}`;
         this.loadExternalAnimations();
     }
 
@@ -1183,7 +1183,7 @@ class App {
 
     private async exportToGLB(options: { bakeSkinning?: boolean } = {}) {
         if (!this.loadedGroup) {
-            alert('Load a BMD model first.');
+            alert('请先加载 BMD 模型。');
             return;
         }
 
@@ -1264,7 +1264,7 @@ class App {
             logger.debug(`✔️  Saved ${fileName} (${(blob.size / 1024).toFixed(1)} KB)`);
         } catch (error) {
             logger.error('❌ GLTFExporter error:', error);
-            alert('Error during export. Check the console.');
+            alert('导出时出错，请查看控制台。');
         } finally {
             // Restore original materials and dispose temporaries
             for (const { mesh, original } of materialSwaps) {
@@ -1278,11 +1278,11 @@ class App {
     private exportGif() {
         if (this.isRecordingGif) return;
         if (!this.rendererReady) {
-            this.setStatusMessage('Renderer is still initializing.');
+            this.setStatusMessage('渲染器仍在初始化中。');
             return;
         }
         if (!this.loadedGroup) {
-            alert('Load a BMD model first.');
+            alert('请先加载 BMD 模型。');
             return;
         }
 
@@ -1290,7 +1290,7 @@ class App {
         const gifBtn = document.getElementById('export-gif-btn') as HTMLButtonElement | null;
 
         this.isRecordingGif = true;
-        status.textContent = 'Recording GIF…';
+        status.textContent = '正在录制 GIF…';
         if (gifBtn) gifBtn.disabled = true;
 
         // --- dimensions ---
@@ -1346,7 +1346,7 @@ class App {
         if (this.gridHelper) this.gridHelper.visible = false;
 
         gif.on('progress', (p: number) => {
-            status.textContent = `Rendering GIF… ${(p * 100).toFixed(0)}%`;
+            status.textContent = `正在渲染 GIF… ${(p * 100).toFixed(0)}%`;
         });
 
         gif.on('finished', (blob: Blob) => {
@@ -1363,7 +1363,7 @@ class App {
 
             this.isRecordingGif = false;
             if (gifBtn) gifBtn.disabled = false;
-            status.textContent = `GIF saved (${w}×${h}).`;
+            status.textContent = `GIF 已保存 (${w}×${h})。`;
         });
 
         gif.on('abort', () => {
@@ -1373,7 +1373,7 @@ class App {
 
             this.isRecordingGif = false;
             if (gifBtn) gifBtn.disabled = false;
-            status.textContent = 'GIF recording aborted.';
+            status.textContent = 'GIF 录制已取消。';
         });
 
         if (!hasAnim || !clip || numKeys === 0) {
@@ -1460,7 +1460,7 @@ class App {
         const suppressRecent = options?.suppressRecent ?? false;
         const skipClear = options?.skipClear ?? false;
         const statusEl = document.getElementById('status')!;
-        statusEl.textContent = 'Loading model…';
+        statusEl.textContent = '正在加载模型…';
         logger.groupDebug('loadAndDisplayModel()');
         logger.time('loadAndDisplayModel');
 
@@ -1487,7 +1487,7 @@ class App {
             this.mainSkeleton = mainSkinnedMesh?.skeleton || null;
 
             this.setupAnimations(group);
-            statusEl.textContent = `Loaded: ${group.name} (animations: ${group.animations.length})`;
+            statusEl.textContent = `已加载: ${group.name}（动画数: ${group.animations.length}）`;
             this.updateTextureUI();
             this.updateDiagnosticInfo();
             if (this.exportBtn) this.exportBtn.disabled = false;
@@ -1519,7 +1519,7 @@ class App {
                     }
                 }
                 if (autoAppliedCount > 0) {
-                    statusEl.textContent = `Loaded: ${group.name} | Auto-loaded ${autoAppliedCount} matching world textures`;
+                    statusEl.textContent = `已加载: ${group.name} | 自动加载了 ${autoAppliedCount} 个匹配的世界贴图`;
                 }
             }
 
@@ -1528,7 +1528,7 @@ class App {
                 logger.debug('%c[Electron] Auto-searching textures...', 'color: #4CAF50');
                 logger.debug('[Electron] Required textures from BMD:', requiredTextures);
                 logger.debug('[Electron] BMD file path:', this.lastBmdFilePath);
-                statusEl.textContent = 'Searching for textures...';
+                statusEl.textContent = '正在搜索贴图...';
 
                 try {
                     const foundTextures = await autoSearchTextures(this.lastBmdFilePath, requiredTextures);
@@ -1547,13 +1547,13 @@ class App {
                             }
                         }
 
-                        statusEl.textContent = `Loaded: ${group.name} | Auto-loaded ${texturePaths.length} texture files for ${foundCount} base names`;
+                        statusEl.textContent = `已加载: ${group.name} | 为 ${foundCount} 个基础名自动加载了 ${texturePaths.length} 个贴图文件`;
                     } else {
-                        statusEl.textContent = `Loaded: ${group.name} | No textures found automatically`;
+                        statusEl.textContent = `已加载: ${group.name} | 未自动找到贴图`;
                     }
                 } catch (error) {
                     logger.error('[Electron] Error auto-searching textures:', error);
-                    statusEl.textContent = `Loaded: ${group.name} | Texture search failed`;
+                    statusEl.textContent = `已加载: ${group.name} | 贴图搜索失败`;
                 }
             }
 
@@ -1591,7 +1591,7 @@ class App {
 
         } catch (err) {
             logger.error('loader.load() ERROR', err);
-            statusEl.textContent = `Error: ${(err as Error).message}`;
+            statusEl.textContent = `错误: ${(err as Error).message}`;
             this.pendingRecentModelContext = null;
         } finally {
             logger.timeEnd('loadAndDisplayModel');
@@ -1630,7 +1630,7 @@ class App {
             if (clips.length) {
                 this.loadedGroup.animations = clips;
                 this.setupAnimations(this.loadedGroup);
-                document.getElementById('status')!.textContent = `Animations loaded from ${this.animBmdFile.name}`;
+                document.getElementById('status')!.textContent = `已从 ${this.animBmdFile.name} 加载动画`;
             }
         } catch (e) {
             logger.error('Failed to load external animations', e);
@@ -1656,7 +1656,7 @@ class App {
             row.className = 'blend-row';
 
             const label = document.createElement('span');
-            label.textContent = mesh.name || `Mesh ${idx}`;
+            label.textContent = mesh.name || `网格 ${idx}`;
             label.className = 'blend-label';
 
             const select = document.createElement('select');
@@ -1686,7 +1686,7 @@ class App {
 
             const thresholdLabel = document.createElement('span');
             thresholdLabel.className = 'blend-threshold-label';
-            thresholdLabel.textContent = 'Black Key';
+            thresholdLabel.textContent = '黑键阈值';
 
             const thresholdSlider = document.createElement('input');
             thresholdSlider.type = 'range';
@@ -1798,7 +1798,7 @@ class App {
             textureControls.style.display = 'block';
             textureDropZone.style.display = 'block';
         } else {
-            textureInfo.textContent = "This model does not require textures.";
+            textureInfo.textContent = "此模型不需要贴图。";
             textureControls.style.display = 'block';
             textureDropZone.style.display = 'none';
         }
@@ -1844,7 +1844,7 @@ class App {
             return false;
         }
 
-        status.textContent = `Loading: ${file.name}...`;
+        status.textContent = `正在加载: ${file.name}...`;
 
         try {
             const tex = await this.loadTextureForViewer(file, fileExt);
@@ -1874,12 +1874,12 @@ class App {
 
             if (this.exportBtn) this.exportBtn.disabled = false;
             const firstBlend = getBlendForHint(targets[0].path);
-            status.textContent = `Texture "${file.name}" loaded (blend: ${describeBlendMode(firstBlend.mode)}, ${Math.round(firstBlend.confidence * 100)}%).`;
+            status.textContent = `贴图 "${file.name}" 已加载（混合: ${describeBlendMode(firstBlend.mode)}, ${Math.round(firstBlend.confidence * 100)}%）。`;
             this.rememberAppliedTextureFile(file);
             return true;
         } catch (e) {
             logger.error('Texture load error:', e);
-            status.textContent = `Error: ${(e as Error).message}`;
+            status.textContent = `错误: ${(e as Error).message}`;
             return false;
         }
     }
@@ -2344,7 +2344,7 @@ class App {
         const countEl = document.getElementById('folder-browser-count');
         if (!listEl || !countEl) return;
 
-        countEl.textContent = `${this.folderFiles.length} model${this.folderFiles.length !== 1 ? 's' : ''}`;
+        countEl.textContent = `${this.folderFiles.length} 个模型`;
         listEl.innerHTML = '';
 
         this.folderFiles.forEach((file, i) => {
@@ -2360,7 +2360,7 @@ class App {
             if (cached !== undefined) {
                 const thumbContent = cached
                     ? `<img src="${cached}" alt="${file.name}">`
-                    : '<span class="thumb-placeholder">No preview</span>';
+                    : '<span class="thumb-placeholder">无预览</span>';
                 card.innerHTML = `
                     <div class="model-card-thumb">${thumbContent}</div>
                     <div class="model-card-info">
@@ -2392,7 +2392,7 @@ class App {
             thumbEl.innerHTML = '';
             thumbEl.appendChild(img);
         } else {
-            thumbEl.innerHTML = '<span class="thumb-placeholder">No preview</span>';
+            thumbEl.innerHTML = '<span class="thumb-placeholder">无预览</span>';
         }
     }
 
@@ -2405,7 +2405,7 @@ class App {
     private applyCardThumbnailPending(index: number) {
         const thumbEl = this.getCardThumbnailElement(index);
         if (!thumbEl || this.hasCachedThumbnail(index)) return;
-        thumbEl.innerHTML = '<span class="thumb-placeholder">Preview on scroll</span>';
+        thumbEl.innerHTML = '<span class="thumb-placeholder">滚动预览</span>';
     }
 
     private getCardThumbnailElement(index: number): HTMLElement | null {
@@ -2465,7 +2465,7 @@ class App {
         });
         this.appliedTextureFiles.clear();
         const status = document.getElementById('status');
-        if (status) status.textContent = 'Textures removed.';
+        if (status) status.textContent = '贴图已移除。';
     }
 
     private isDrawableTextureImage(
@@ -2662,7 +2662,7 @@ class App {
         const st = document.getElementById('status')!;
         st.textContent = exported.size
             ? `Exported ${exported.size} texture(s).`
-            : 'No loaded textures to export.';
+            : '没有可导出的已加载贴图。';
     }
 
     //----------------------------------------------------------
@@ -2813,7 +2813,7 @@ class App {
         animBox.innerHTML = '';
 
         if (!model.animations.length) {
-            animBox.textContent = 'No animations in this model.';
+            animBox.textContent = '此模型没有动画。';
             return;
         }
 
@@ -2824,7 +2824,7 @@ class App {
 
         // Add placeholder option
         const placeholderOption = document.createElement('option');
-        placeholderOption.textContent = 'Select Animation';
+        placeholderOption.textContent = '选择动画';
         placeholderOption.value = '';
         placeholderOption.disabled = true;
         select.appendChild(placeholderOption);
@@ -2833,7 +2833,7 @@ class App {
         model.animations.forEach((clip, i) => {
             const option = document.createElement('option');
             option.value = i.toString();
-            option.textContent = `Animation ${i}`;
+            option.textContent = `动画 ${i}`;
             select.appendChild(option);
         });
 
@@ -3012,12 +3012,12 @@ class App {
     private async setupAttachmentControls() {
         logger.debug('[setupAttachmentControls] Starting...');
         if (!this.loadedGroup || !this.currentAttachmentFile) {
-            alert('First load the base character model.');
+            alert('请先加载基础角色模型。');
             return;
         }
 
         if (!this.mainSkeleton) {
-            alert('The base model does not include a skeleton.');
+            alert('基础模型不包含骨骼。');
             return;
         }
 
@@ -3033,12 +3033,12 @@ class App {
         const slider = document.getElementById('attach-bone-slider') as HTMLInputElement;
         const valueLabel = document.getElementById('attach-bone-value')!;
 
-        select.innerHTML = '<option value="">-- Select Bone --</option>';
+        select.innerHTML = '<option value="">-- 选择骨骼 --</option>';
 
         bones.forEach((bone, index) => {
             const option = document.createElement('option');
             option.value = index.toString();
-            option.textContent = `${index}: ${bone.name || 'Unnamed'}`;
+            option.textContent = `${index}: ${bone.name || '未命名'}`;
             select.appendChild(option);
         });
 
@@ -3180,7 +3180,7 @@ class App {
     /** Remove current attachment and hide controls */
     private removeAttachment() {
         if (!this.currentAttachment) {
-            alert('No attachment to remove.');
+            alert('没有可移除的挂载。');
             return;
         }
 
@@ -3197,7 +3197,7 @@ class App {
         controls.style.display = 'none';
 
         // Reset drop zone text
-        document.querySelector('#attach-drop-zone p')!.textContent = 'Drop attachment .bmd';
+        document.querySelector('#attach-drop-zone p')!.textContent = '拖放挂载 .bmd';
 
         // Update skeleton helper
         if (skeletonHelper && this.loadedGroup) {
@@ -3244,7 +3244,7 @@ class App {
     ): Promise<void> {
 
         if (!this.loadedGroup) {
-            alert('First load the base character model.');
+            alert('请先加载基础角色模型。');
             return;
         }
 
@@ -3252,7 +3252,7 @@ class App {
             .getObjectByProperty('type', 'SkinnedMesh') as THREE.SkinnedMesh | undefined;
 
         if (!skinned) {
-            alert('The base model does not include a skeleton.');
+            alert('基础模型不包含骨骼。');
             return;
         }
 
@@ -3310,7 +3310,7 @@ class App {
     private undoLastAttachment() {
         const last = this.attachments.pop();
         if (!last) {
-            alert('No attachments to remove.');
+            alert('没有可移除的挂载。');
             return;
         }
 

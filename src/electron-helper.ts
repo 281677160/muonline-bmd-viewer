@@ -191,7 +191,7 @@ export async function writeFileInDirectory(
   if (!isElectron() || !window.electronAPI?.writeFileInDirectory) {
     return {
       path: null,
-      error: 'Export to folder is only available in Electron.',
+      error: '导出到文件夹仅限 Electron 桌面版可用。',
     };
   }
 
@@ -226,7 +226,7 @@ export function addElectronFileButtons(containerId: string, onFileSelected: (fil
 
   // Add "Load from disk" button
   const button = document.createElement('button');
-  button.textContent = '📁 Open from Disk';
+  button.textContent = '📁 从磁盘打开';
   button.className = 'modern-btn';
   button.style.width = '100%';
   button.style.marginTop = '0.5rem';
@@ -273,7 +273,7 @@ export function showElectronModeIndicator(): void {
     z-index: 10000;
     pointer-events: none;
   `;
-  indicator.textContent = '🖥️ Desktop Mode';
+  indicator.textContent = '🖥️ 桌面模式';
   document.body.appendChild(indicator);
 }
 

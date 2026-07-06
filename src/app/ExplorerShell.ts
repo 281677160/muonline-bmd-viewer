@@ -91,12 +91,12 @@ export function initExplorerShell({
     function formatRelativeTime(timestamp: number): string {
         const deltaMs = Math.max(0, Date.now() - timestamp);
         const deltaMinutes = Math.floor(deltaMs / 60000);
-        if (deltaMinutes < 1) return 'just now';
-        if (deltaMinutes < 60) return `${deltaMinutes}m ago`;
+        if (deltaMinutes < 1) return '刚刚';
+        if (deltaMinutes < 60) return `${deltaMinutes}分钟前`;
         const deltaHours = Math.floor(deltaMinutes / 60);
-        if (deltaHours < 24) return `${deltaHours}h ago`;
+        if (deltaHours < 24) return `${deltaHours}小时前`;
         const deltaDays = Math.floor(deltaHours / 24);
-        return `${deltaDays}d ago`;
+        return `${deltaDays}天前`;
     }
 
     function switchToView(target: ViewerTab): void {
@@ -122,7 +122,7 @@ export function initExplorerShell({
         const state = explorerStore.getState();
         const parts: string[] = [];
         if (state.activeView === 'terrain') {
-            const worldLabel = state.terrain.lastWorldNumber !== null ? `World ${state.terrain.lastWorldNumber}` : 'World Viewer';
+            const worldLabel = state.terrain.lastWorldNumber !== null ? `世界 ${state.terrain.lastWorldNumber}` : '世界查看器';
             parts.push(worldLabel);
             if (state.terrain.selectedObject?.displayName) {
                 parts.push(state.terrain.selectedObject.displayName);
@@ -132,9 +132,9 @@ export function initExplorerShell({
                 preset.classValue === state.character.classValue &&
                 preset.equipment.helm === state.character.equipment.helm,
             )?.name;
-            parts.push(presetLabel || 'Character Preview');
+            parts.push(presetLabel || '角色预览');
         } else {
-            parts.push(state.bmd.lastModelName || 'Model Viewer');
+            parts.push(state.bmd.lastModelName || '模型查看器');
         }
         presentationOverlay.textContent = parts.join(' • ');
     }
@@ -183,7 +183,7 @@ export function initExplorerShell({
         container.innerHTML = '';
 
         if (worldNumbers.length === 0) {
-            container.appendChild(createExplorerEmpty('No worlds loaded yet.'));
+            container.appendChild(createExplorerEmpty('尚未加载世界。'));
             return;
         }
 
@@ -195,14 +195,14 @@ export function initExplorerShell({
         worldNumbers.forEach(worldNumber => {
             const option = document.createElement('option');
             option.value = `${worldNumber}`;
-            option.textContent = `World ${worldNumber}`;
+            option.textContent = `世界 ${worldNumber}`;
             if (selectedWorldNumber === worldNumber) {
                 option.selected = true;
             }
             select.appendChild(option);
         });
 
-        const openButton = createActionButton('Open', () => {
+        const openButton = createActionButton('打开', () => {
             const worldNumber = parseInt(select.value, 10);
             if (Number.isNaN(worldNumber)) return;
             switchToView('terrain');
@@ -230,7 +230,7 @@ export function initExplorerShell({
         }
 
         switchToView('bmd');
-        app.setStatusMessage(`Model "${entry.label}" is not currently available. Reload the relevant world data first.`);
+        app.setStatusMessage(`模型 "${entry.label}" 当前不可用。请先重新加载相关的世界数据。`);
     }
 
     async function openBookmark(bookmark: ExplorerBookmark): Promise<void> {
@@ -286,16 +286,16 @@ export function initExplorerShell({
                 const label = document.createElement('div');
                 label.className = 'explorer-item-label';
                 label.innerHTML = recentEntry
-                    ? `${bookmark.name}<span class="explorer-item-meta">World ${bookmark.worldNumber} • Recent ${formatRelativeTime(recentEntry.timestamp)}</span>`
-                    : `${bookmark.name}<span class="explorer-item-meta">World ${bookmark.worldNumber}</span>`;
+                    ? `${bookmark.name}<span class="explorer-item-meta">世界 ${bookmark.worldNumber} • 最近 ${formatRelativeTime(recentEntry.timestamp)}</span>`
+                    : `${bookmark.name}<span class="explorer-item-meta">世界 ${bookmark.worldNumber}</span>`;
                 item.appendChild(label);
-                item.appendChild(createActionButton('Open', () => { void openBookmark(bookmark); }));
-                item.appendChild(createActionButton('Rename', () => {
-                    const name = window.prompt('Rename bookmark', bookmark.name)?.trim();
+                item.appendChild(createActionButton('打开', () => { void openBookmark(bookmark); }));
+                item.appendChild(createActionButton('重命名', () => {
+                    const name = window.prompt('重命名书签', bookmark.name)?.trim();
                     if (!name) return;
                     explorerStore.renameBookmark(bookmark.id, name);
                 }));
-                item.appendChild(createActionButton('Delete', () => {
+                item.appendChild(createActionButton('删除', () => {
                     explorerStore.deleteBookmark(bookmark.id);
                 }, 'is-danger'));
                 return item;
@@ -308,16 +308,16 @@ export function initExplorerShell({
                 item.className = 'explorer-item';
                 const label = document.createElement('div');
                 label.className = 'explorer-item-label';
-                label.innerHTML = `${preset.pinned ? '★ ' : ''}${preset.name}<span class="explorer-item-meta">Class ${preset.classValue}</span>`;
+                label.innerHTML = `${preset.pinned ? '★ ' : ''}${preset.name}<span class="explorer-item-meta">职业 ${preset.classValue}</span>`;
                 item.appendChild(label);
-                item.appendChild(createActionButton('Apply', () => {
+                item.appendChild(createActionButton('应用', () => {
                     switchToView('character');
                     characterScene.applyCharacterPreset(preset);
                 }));
-                item.appendChild(createActionButton(preset.pinned ? 'Unpin' : 'Pin', () => {
+                item.appendChild(createActionButton(preset.pinned ? '取消置顶' : '置顶', () => {
                     explorerStore.toggleCharacterPresetPinned(preset.id);
                 }));
-                item.appendChild(createActionButton('Delete', () => {
+                item.appendChild(createActionButton('删除', () => {
                     explorerStore.deleteCharacterPreset(preset.id);
                 }, 'is-danger'));
                 return item;
@@ -330,16 +330,16 @@ export function initExplorerShell({
                 item.className = 'explorer-item';
                 const label = document.createElement('div');
                 label.className = 'explorer-item-label';
-                label.innerHTML = `${entry.label}<span class="explorer-item-meta">${entry.modelFileKey || 'Transient file'}</span>`;
+                label.innerHTML = `${entry.label}<span class="explorer-item-meta">${entry.modelFileKey || '临时文件'}</span>`;
                 item.appendChild(label);
-                item.appendChild(createActionButton('Open', () => { void openRecentModel(entry); }));
+                item.appendChild(createActionButton('打开', () => { void openRecentModel(entry); }));
                 return item;
             });
 
         renderWorldSelector(explorerWorldsList, worldNumbers, state.terrain.lastWorldNumber);
-        renderExplorerList(explorerBookmarksList, bookmarkItems, 'No bookmarks saved.');
-        renderExplorerList(explorerCharactersList, presetItems, 'No character presets saved.');
-        renderExplorerList(explorerModelsList, modelItems, 'No recent models.');
+        renderExplorerList(explorerBookmarksList, bookmarkItems, '暂无保存的书签。');
+        renderExplorerList(explorerCharactersList, presetItems, '暂无保存的角色预设。');
+        renderExplorerList(explorerModelsList, modelItems, '暂无最近模型。');
         updatePresentationOverlay();
     }
 
@@ -379,7 +379,7 @@ export function initExplorerShell({
     terrainScene.onWorldLoaded = (worldNumber) => {
         explorerStore.pushRecentWorld({
             worldNumber,
-            label: `World ${worldNumber}`,
+            label: `世界 ${worldNumber}`,
             timestamp: Date.now(),
         });
         explorerStore.setTerrainState(terrainScene.getCurrentState());
@@ -397,7 +397,7 @@ export function initExplorerShell({
     };
     terrainScene.onOpenModelRequest = (selection, modelFile) => {
         if (!modelFile) {
-            terrainScene.setStatusMessage(`Model for "${selection.displayName}" is not available in current world files.`);
+            terrainScene.setStatusMessage(`"${selection.displayName}" 的模型在当前世界文件中不可用。`);
             return;
         }
         switchToView('bmd');

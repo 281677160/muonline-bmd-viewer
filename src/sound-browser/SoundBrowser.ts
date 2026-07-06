@@ -160,11 +160,11 @@ export class SoundBrowser {
     private async selectFolderElectron(): Promise<void> {
         const folderPath = await openDirectoryDialog();
         if (!folderPath) return;
-        if (this.loadStatusEl) this.loadStatusEl.textContent = 'Scanning folder…';
+        if (this.loadStatusEl) this.loadStatusEl.textContent = '正在扫描文件夹…';
 
         try {
             if (!window.electronAPI) {
-                if (this.loadStatusEl) this.loadStatusEl.textContent = 'Electron API not available.';
+                if (this.loadStatusEl) this.loadStatusEl.textContent = 'Electron API 不可用。';
                 return;
             }
 
@@ -188,15 +188,15 @@ export class SoundBrowser {
 
             if (this.loadStatusEl) {
                 this.loadStatusEl.textContent = entries.length > 0
-                    ? `${entries.length} sound file(s) loaded.`
-                    : 'No sound files found in folder.';
+	                    ? `已加载 ${entries.length} 个音效文件。`
+	                    : '文件夹中未找到音效文件。';
             }
 
             this.isLoading = false;
             this.applyFilter();
             this.render();
         } catch (err) {
-            if (this.loadStatusEl) this.loadStatusEl.textContent = 'Failed to read folder.';
+            if (this.loadStatusEl) this.loadStatusEl.textContent = '读取文件夹失败。';
         }
     }
 
@@ -210,7 +210,7 @@ export class SoundBrowser {
         if (soundFiles.length === 0 || this.isLoading) return;
         this.isLoading = true;
 
-        if (this.loadStatusEl) this.loadStatusEl.textContent = `Loading ${soundFiles.length} file(s)…`;
+        if (this.loadStatusEl) this.loadStatusEl.textContent = `正在加载 ${soundFiles.length} 个文件…`;
 
         const newEntries: SoundEntry[] = [];
         await Promise.all(soundFiles.map(async file => {
@@ -233,8 +233,8 @@ export class SoundBrowser {
 
         if (this.loadStatusEl) {
             this.loadStatusEl.textContent = this.entries.length > 0
-                ? `${this.entries.length} sound file(s) loaded.`
-                : 'No sound files loaded.';
+                ? `已加载 ${this.entries.length} 个音频文件。`
+                : '未加载音频文件。';
         }
 
         this.isLoading = false;
@@ -264,7 +264,7 @@ export class SoundBrowser {
 
     private updateStats(): void {
         if (this.statusEl && this.entries.length > 0) {
-            this.statusEl.textContent = `${this.filteredEntries.length} / ${this.entries.length} sounds`;
+            this.statusEl.textContent = `${this.filteredEntries.length} / ${this.entries.length} 个音效`;
         }
     }
 
@@ -305,7 +305,7 @@ export class SoundBrowser {
 
         const source = await createSoundPlaybackSource(entry);
         if (!source) {
-            if (this.loadStatusEl) this.loadStatusEl.textContent = 'Failed to read audio file.';
+            if (this.loadStatusEl) this.loadStatusEl.textContent = '读取音频文件失败。';
             return;
         }
 
@@ -313,7 +313,7 @@ export class SoundBrowser {
         this.currentObjectUrl = source.objectUrl;
         this.currentAudio.src = source.url;
         if (this.fileNameEl) this.fileNameEl.textContent = entry.name;
-        if (this.loadStatusEl) this.loadStatusEl.textContent = `Ready: ${entry.name}`;
+        if (this.loadStatusEl) this.loadStatusEl.textContent = `就绪: ${entry.name}`;
 
         if (this.volumeSliderEl) {
             this.currentAudio.volume = parseFloat(this.volumeSliderEl.value);
@@ -342,21 +342,21 @@ export class SoundBrowser {
             this.currentAudio = null;
             if (this.progressBarEl) this.progressBarEl.value = 0;
             if (this.currentTimeEl) this.currentTimeEl.textContent = '0:00';
-            if (this.playBtnEl) this.playBtnEl.textContent = 'Play';
+            if (this.playBtnEl) this.playBtnEl.textContent = '播放';
         });
 
         this.currentAudio.addEventListener('error', () => {
             this.stopSound();
-            if (this.loadStatusEl) this.loadStatusEl.textContent = 'Failed to load audio.';
+            if (this.loadStatusEl) this.loadStatusEl.textContent = '加载音频失败。';
         });
 
         try {
             await this.currentAudio.play();
-            if (this.playBtnEl) this.playBtnEl.textContent = 'Pause';
-            if (this.loadStatusEl) this.loadStatusEl.textContent = `Playing: ${entry.name}`;
+            if (this.playBtnEl) this.playBtnEl.textContent = '暂停';
+            if (this.loadStatusEl) this.loadStatusEl.textContent = `正在播放: ${entry.name}`;
         } catch {
             this.stopSound();
-            if (this.loadStatusEl) this.loadStatusEl.textContent = 'Failed to play audio.';
+            if (this.loadStatusEl) this.loadStatusEl.textContent = '播放音频失败。';
         }
     }
 
@@ -370,8 +370,8 @@ export class SoundBrowser {
         if (this.progressBarEl) this.progressBarEl.value = 0;
         if (this.currentTimeEl) this.currentTimeEl.textContent = '0:00';
         if (this.durationEl) this.durationEl.textContent = '0:00';
-        if (this.fileNameEl) this.fileNameEl.textContent = this.selectedEntry?.name ?? 'No file selected';
-        if (this.playBtnEl) this.playBtnEl.textContent = 'Play';
+        if (this.fileNameEl) this.fileNameEl.textContent = this.selectedEntry?.name ?? '未选择文件';
+        if (this.playBtnEl) this.playBtnEl.textContent = '播放';
     }
 
     private revokeCurrentObjectUrl(): void {
@@ -395,8 +395,8 @@ export class SoundBrowser {
         this.selectedEntry = null;
         this.searchQuery = '';
         if (this.searchInputEl) this.searchInputEl.value = '';
-        if (this.loadStatusEl) this.loadStatusEl.textContent = 'No files loaded.';
-        if (this.statusEl) this.statusEl.textContent = 'Sound Browser';
+        if (this.loadStatusEl) this.loadStatusEl.textContent = '未加载文件。';
+        if (this.statusEl) this.statusEl.textContent = '音效浏览器';
         this.render();
     }
 
@@ -417,7 +417,7 @@ export class SoundBrowser {
         if (this.filteredEntries.length === 0) {
             const empty = document.createElement('div');
             empty.className = 'sound-list-empty';
-            empty.textContent = this.searchQuery ? 'No files match the filter.' : 'No files loaded.';
+            empty.textContent = this.searchQuery ? '没有匹配的文件。' : '未加载文件。';
             this.listEl.appendChild(empty);
             return;
         }
@@ -434,7 +434,7 @@ export class SoundBrowser {
 
             const type = document.createElement('span');
             type.className = 'sound-list-item-type';
-            type.textContent = entry.name.split('.').pop()?.toUpperCase() ?? 'AUDIO';
+            type.textContent = entry.name.split('.').pop()?.toUpperCase() ?? '音频';
 
             item.append(name, type);
             item.addEventListener('click', () => {

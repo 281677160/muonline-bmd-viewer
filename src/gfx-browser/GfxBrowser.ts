@@ -265,10 +265,10 @@ export class GfxBrowser {
   private updateStageNote(): void {
     if (!this.stageNoteEl) return;
     const zoomPct = Math.round(this.stageZoom * 100);
-    const hint = 'Scroll to zoom, drag to pan, double-click to reset';
-    this.stageNoteEl.textContent = this.stageNoteBase
-      ? `${this.stageNoteBase}  \u2502  Zoom: ${zoomPct}%  \u2502  ${hint}.`
-      : '';
+    const hint = '滚轮缩放，拖拽平移，双击重置';
+	    this.stageNoteEl.textContent = this.stageNoteBase
+	      ? `${this.stageNoteBase}  \u2502  缩放: ${zoomPct}%  \u2502  ${hint}。`
+	      : '';
   }
 
   private async loadOzgRender(files: File[]): Promise<void> {
@@ -280,14 +280,14 @@ export class GfxBrowser {
       .sort((a, b) => a.name.localeCompare(b.name));
 
     if (ozgFiles.length === 0) {
-      this.setStatus('No OZG/GFX/SWF render file found.');
+      this.setStatus('未找到 OZG/GFX/SWF 渲染文件。');
       return;
     }
 
     const renderFile = ozgFiles[0];
     this.clearAll();
     console.log(`[GfxBrowser] Loading OZG render ${renderFile.name}`);
-    this.setStatus(`Loading ${renderFile.name}\u2026`);
+    this.setStatus(`正在加载 ${renderFile.name}…`);
     this.stageZoom = 1;
     this.applyStageZoom();
 
@@ -302,7 +302,7 @@ export class GfxBrowser {
       }
     } catch (err) {
       console.error(`[GfxBrowser] ${renderFile.name}:`, err);
-      this.setStatus(`Failed to load ${renderFile.name}.`);
+      this.setStatus(`加载 ${renderFile.name} 失败。`);
       return;
     }
 
@@ -319,13 +319,13 @@ export class GfxBrowser {
       .sort((a, b) => a.name.localeCompare(b.name));
 
     if (ozdFiles.length === 0) {
-      this.setStatus('No OZD files found.');
+      this.setStatus('未找到 OZD 文件。');
       return;
     }
 
     this.clearAll();
     console.log(`[GfxBrowser] Loading ${ozdFiles.length} OZD image file(s)`);
-    this.setStatus(`Loading ${ozdFiles.length} OZD image file(s)\u2026`);
+    this.setStatus(`正在加载 ${ozdFiles.length} 个 OZD 图片文件…`);
 
     for (const file of ozdFiles) {
       await this.tryProcessOzdFile(file);
@@ -568,10 +568,10 @@ export class GfxBrowser {
     if (this.ozgInfo) {
       const f = this.ozgInfo.frame;
       const fps = (f.fpsFixed88 / 256).toFixed(1);
-      parts.push(`${this.ozgInfo.name}: SWF v${this.ozgInfo.version}, ${f.widthPx}\u00d7${f.heightPx}px, ${fps} FPS, ${this.allTags.length} tags`);
-    }
-    if (this.textures.size) parts.push(`${this.textures.size} texture(s)`);
-    if (this.externalImages.length) parts.push(`${this.externalImages.length} ext. image refs`);
+      parts.push(`${this.ozgInfo.name}: SWF v${this.ozgInfo.version}, ${f.widthPx}\u00d7${f.heightPx}px, ${fps} FPS, ${this.allTags.length} 个标签`);
+	    }
+	    if (this.textures.size) parts.push(`${this.textures.size} 张贴图`);
+	    if (this.externalImages.length) parts.push(`${this.externalImages.length} 个外部图片引用`);
 
     if (this.statsEl) {
       this.statsEl.textContent = parts.join('  \u2502  ');
@@ -642,18 +642,18 @@ export class GfxBrowser {
     ctx.restore();
 
     if (usedTextureOverview) {
-      this.stageNoteBase = displayList.length > 0
-        ? `No drawable placed images found; showing ${drawn} loaded image resource(s).`
-        : `No placed frame objects found; showing ${drawn} loaded image resource(s).`;
-    } else if (displayList.length > 0) {
-      this.stageNoteBase = missing > 0
-        ? `Rendered ${drawn} placed image(s), ${missing} missing texture file(s).`
-        : `Rendered ${drawn} placed image(s).`;
-    } else if (this.externalImages.length > 0) {
-      this.stageNoteBase = `This GFx references external textures. Drop the matching .ozd files to render them.`;
-    } else {
-      this.stageNoteBase = `No renderable image resources found in this GFx.`;
-    }
+	      this.stageNoteBase = displayList.length > 0
+	        ? `未找到可绘制的已放置图片；显示 ${drawn} 个已加载的图片资源。`
+	        : `未找到已放置的帧对象；显示 ${drawn} 个已加载的图片资源。`;
+	    } else if (displayList.length > 0) {
+	      this.stageNoteBase = missing > 0
+	        ? `已渲染 ${drawn} 个已放置图片，${missing} 个贴图文件缺失。`
+	        : `已渲染 ${drawn} 个已放置图片。`;
+	    } else if (this.externalImages.length > 0) {
+	      this.stageNoteBase = `此 GFx 引用了外部贴图。拖放匹配的 .ozd 文件以渲染它们。`;
+	    } else {
+	      this.stageNoteBase = `此 GFx 中未找到可渲染的图片资源。`;
+	    }
     this.updateStageNote();
   }
 
@@ -888,13 +888,13 @@ export class GfxBrowser {
       .map(b => b.toString(16).padStart(2, '0'))
       .join(' ');
     this.detailEl.innerHTML = `
-      <div class="bmd-detail-grid">
-        <div class="bmd-detail-field"><span>Tag type</span><b>${tag.type}</b></div>
-        <div class="bmd-detail-field"><span>Name</span><b>${esc(tag.name)}</b></div>
-        <div class="bmd-detail-field"><span>Size</span><b>${tag.length} bytes</b></div>
-        <div class="bmd-detail-field"><span>Offset</span><b>${tag.offset}</b></div>
-      </div>
-      ${tag.data.length > 0 ? `<div class="gfx-hex-preview">${hex}${tag.data.length > 64 ? ' \u2026' : ''}</div>` : ''}`;
+	      <div class="bmd-detail-grid">
+	        <div class="bmd-detail-field"><span>标签类型</span><b>${tag.type}</b></div>
+	        <div class="bmd-detail-field"><span>名称</span><b>${esc(tag.name)}</b></div>
+	        <div class="bmd-detail-field"><span>大小</span><b>${tag.length} 字节</b></div>
+	        <div class="bmd-detail-field"><span>偏移</span><b>${tag.offset}</b></div>
+	      </div>
+	      ${tag.data.length > 0 ? `<div class="gfx-hex-preview">${hex}${tag.data.length > 64 ? ' \u2026' : ''}</div>` : ''}`;
     this.detailEl.classList.remove('hidden');
   }
 
@@ -905,11 +905,11 @@ export class GfxBrowser {
     const info = document.createElement('div');
     info.className = 'bmd-detail-grid';
     info.innerHTML = `
-      <div class="bmd-detail-field"><span>Tag</span><b>${esc(tag.name)} (${tag.type})</b></div>
-      <div class="bmd-detail-field"><span>Char ID</span><b>${ref.charId}</b></div>
-      <div class="bmd-detail-field"><span>Size</span><b>${ref.width} \u00d7 ${ref.height}</b></div>
-      <div class="bmd-detail-field"><span>Export</span><b>${esc(ref.exportName)}</b></div>
-      <div class="bmd-detail-field"><span>File</span><b>${esc(ref.fileName)}</b></div>`;
+	      <div class="bmd-detail-field"><span>标签</span><b>${esc(tag.name)} (${tag.type})</b></div>
+	      <div class="bmd-detail-field"><span>角色 ID</span><b>${ref.charId}</b></div>
+	      <div class="bmd-detail-field"><span>大小</span><b>${ref.width} \u00d7 ${ref.height}</b></div>
+	      <div class="bmd-detail-field"><span>导出</span><b>${esc(ref.exportName)}</b></div>
+	      <div class="bmd-detail-field"><span>文件</span><b>${esc(ref.fileName)}</b></div>`;
     this.detailEl.appendChild(info);
 
     const tex = this.findMatchingTexture(ref);
@@ -933,15 +933,15 @@ export class GfxBrowser {
     const info = document.createElement('div');
     info.className = 'bmd-detail-grid';
     info.innerHTML = `
-      <div class="bmd-detail-field"><span>File</span><b>${esc(tex.name)}</b></div>
-      <div class="bmd-detail-field"><span>Size</span><b>${tex.width} \u00d7 ${tex.height}</b></div>
-      <div class="bmd-detail-field"><span>Format</span><b>DDS ${tex.format}</b></div>`;
+	      <div class="bmd-detail-field"><span>文件</span><b>${esc(tex.name)}</b></div>
+	      <div class="bmd-detail-field"><span>大小</span><b>${tex.width} \u00d7 ${tex.height}</b></div>
+	      <div class="bmd-detail-field"><span>格式</span><b>DDS ${tex.format}</b></div>`;
 
     const ref = this.externalImages.find(r => this.findMatchingTexture(r) === tex);
     if (ref) {
       info.innerHTML += `
-        <div class="bmd-detail-field"><span>Char ID</span><b>${ref.charId}</b></div>
-        <div class="bmd-detail-field"><span>Export</span><b>${esc(ref.exportName)}</b></div>`;
+	        <div class="bmd-detail-field"><span>角色 ID</span><b>${ref.charId}</b></div>
+	        <div class="bmd-detail-field"><span>导出</span><b>${esc(ref.exportName)}</b></div>`;
     }
     this.detailEl.appendChild(info);
 
@@ -1028,7 +1028,7 @@ export class GfxBrowser {
   }
 
   private setStatus(msg: string): void {
-    if (this.statusEl) this.statusEl.textContent = msg || 'GFx Browser';
+    if (this.statusEl) this.statusEl.textContent = msg || 'GFx 浏览器';
   }
 }
 
