@@ -11,7 +11,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Oxanium:wght@500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
     rel="stylesheet">
-  <script type="module" crossorigin src="/muonline-bmd-viewer/app/assets/index-DeS3rGoK.js"></script>
+  <script type="module" crossorigin src="/muonline-bmd-viewer/app/assets/index-C7VOkOVX.js"></script>
   <link rel="modulepreload" crossorigin href="/muonline-bmd-viewer/app/assets/rolldown-runtime-B1FJdls4.js">
   <link rel="modulepreload" crossorigin href="/muonline-bmd-viewer/app/assets/vendor-CyptC6jy.js">
   <link rel="modulepreload" crossorigin href="/muonline-bmd-viewer/app/assets/vendor-three-webgpu-CohLeNjA.js">
@@ -31,7 +31,7 @@
       <div class="sidebar-tabs" id="sidebar-tabs">
         <button class="tab-btn active" data-view="bmd">模型</button>
         <button class="tab-btn" data-view="character">角色</button>
-        <button class="tab-btn" data-view="terrain">世界</button>
+        <button class="tab-btn" data-view="terrain">地图</button>
         <button class="tab-btn" data-view="att">ATT</button>
         <button class="tab-btn" data-view="ozj">OZJ</button>
         <button class="tab-btn" data-view="items">物品</button>
@@ -504,9 +504,9 @@
 
         <div id="sidebar-terrain" class="sidebar-view hidden">
           <div class="control-section" id="terrain-world-data-section"
-            data-menu-description="加载数据并在一处选择当前世界，然后再在地图中移动。"
+            data-menu-description="加载数据并在一处选择当前地图，然后再在地图中移动。"
             data-menu-badge="开始">
-            <h3>世界数据</h3>
+            <h3>地图数据</h3>
             <div class="drop-zone" id="terrain-data-drop-zone" title="加载数据文件夹">
               <p>拖放 <strong>Data</strong> 文件夹到此处</p>
               <input type="file" id="terrain-data-folder-input" webkitdirectory directory multiple class="file-input-hidden" />
@@ -514,10 +514,10 @@
             <p id="terrain-status" class="control-note">未加载数据。</p>
 
             <div id="terrain-world-selector" class="section-gap initially-hidden">
-              <label for="terrain-world-select" class="field-label">世界</label>
+              <label for="terrain-world-select" class="field-label">地图</label>
               <div class="row-inline">
                 <select id="terrain-world-select" class="animation-dropdown full-width">
-                  <option value="">-- 选择世界 --</option>
+                  <option value="">-- 选择地图 --</option>
                 </select>
                 <button id="terrain-load-world-btn" class="modern-btn btn-primary">加载</button>
               </div>
@@ -528,7 +528,7 @@
             data-menu-description="读取已加载的 ATT 头信息，在此查看所有 TWFlags 位。"
             data-menu-badge="检查">
             <h3>ATT 参数</h3>
-            <p id="terrain-attribute-status" class="control-note accent-note">加载世界以查看 ATT 元数据。</p>
+            <p id="terrain-attribute-status" class="control-note accent-note">加载地图以查看 ATT 元数据。</p>
             <div class="terrain-attribute-grid section-gap">
               <div class="terrain-attribute-field">
                 <span class="terrain-attribute-field-label">版本</span>
@@ -584,7 +584,7 @@
           </div>
 
           <div class="control-section" id="terrain-viewport-section"
-            data-menu-description="加载世界后的渲染和距离控制。"
+            data-menu-description="加载地图后的渲染和距离控制。"
             data-menu-badge="预览">
             <h3>视口</h3>
             <label for="terrain-renderer-backend" class="field-label">渲染后端</label>
@@ -630,7 +630,7 @@
             <h3>选中对象</h3>
             <div id="terrain-object-empty" class="control-note">未选中对象。</div>
             <div id="terrain-object-details" class="hidden">
-              <p>世界: <span id="terrain-selected-world">-</span></p>
+              <p>地图: <span id="terrain-selected-world">-</span></p>
               <p>类型: <span id="terrain-selected-type">-</span></p>
               <p>模型: <span id="terrain-selected-model">-</span></p>
               <p>位置: <span id="terrain-selected-position">-</span></p>
@@ -654,7 +654,7 @@
           </div>
 
           <div class="control-section" id="terrain-stats"
-            data-menu-description="高级计数器，用于排查世界加载和密度问题。"
+            data-menu-description="高级计数器，用于排查地图加载和密度问题。"
             data-menu-badge="统计">
             <h3>统计</h3>
             <p>图块: <span id="terrain-tile-count">0</span></p>
@@ -665,7 +665,7 @@
         <div id="sidebar-att" class="sidebar-view hidden">
 
           <div class="control-section" id="att-load-section"
-            data-menu-description="直接加载独立的 ATT 文件，无需加载完整世界。"
+            data-menu-description="直接加载独立的 ATT 文件，无需加载完整地图。"
             data-menu-badge="加载">
             <h3>加载 ATT 文件</h3>
             <div class="drop-zone" id="att-drop-zone" title="加载 ATT 文件">
@@ -675,13 +675,13 @@
           </div>
 
           <div class="control-section" id="att-info-section"
-            data-menu-description="ATT 文件元数据和已加载世界的原始统计信息。"
+            data-menu-description="ATT 文件元数据和已加载地图的原始统计信息。"
             data-menu-badge="信息">
             <h3>ATT 元数据</h3>
-            <p id="att-inspector-status" class="control-note accent-note">无 ATT 数据。请加载世界或拖放 ATT 文件。</p>
+            <p id="att-inspector-status" class="control-note accent-note">无 ATT 数据。请加载地图或拖放 ATT 文件。</p>
             <div id="att-meta-grid" class="terrain-attribute-grid section-gap">
               <div class="terrain-attribute-field">
-                <span class="terrain-attribute-field-label">世界</span>
+                <span class="terrain-attribute-field-label">地图</span>
                 <strong id="att-meta-world" class="terrain-attribute-field-value">-</strong>
               </div>
               <div class="terrain-attribute-field">
@@ -919,7 +919,7 @@
       <aside id="terrain-object-editor-panel" class="terrain-object-editor-panel hidden">
         <div class="terrain-editor-header">
           <div>
-            <p class="sidebar-eyebrow">世界对象</p>
+            <p class="sidebar-eyebrow">地图对象</p>
             <h2 class="terrain-editor-title" id="terrain-editor-title">对象编辑器</h2>
           </div>
           <button id="terrain-editor-close-btn" class="folder-browser-close" title="关闭面板">✕</button>
@@ -942,13 +942,13 @@
 
         <div class="section-divider">
           <h3>类型材质</h3>
-          <p class="control-note">保存会将混合和透明阈值应用到此世界和类型的每个对象。</p>
+          <p class="control-note">保存会将混合和透明阈值应用到此地图和类型的每个对象。</p>
           <div id="terrain-editor-materials" class="stack-md space-top-sm"></div>
         </div>
 
         <div class="section-divider stack-sm">
           <button id="terrain-editor-save-btn" class="modern-btn btn-primary full-width">保存对象设置</button>
-          <button id="terrain-export-world-obj-btn" class="modern-btn full-width">导出世界 OBJ</button>
+          <button id="terrain-export-world-obj-btn" class="modern-btn full-width">导出地图 OBJ</button>
           <button id="terrain-editor-reset-btn" class="modern-btn btn-danger full-width">重置对象设置</button>
           <p id="terrain-editor-status" class="control-note"></p>
         </div>
@@ -963,7 +963,7 @@
         <div id="att-no-data" class="att-no-data">
           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
           <p>未加载 ATT 数据。</p>
-          <p class="att-no-data-hint">切换到<strong>世界</strong>选项卡并先加载一个世界。</p>
+          <p class="att-no-data-hint">切换到<strong>地图</strong>选项卡并先加载一个地图。</p>
         </div>
 
         <!-- Map canvas wrapper -->
