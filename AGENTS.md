@@ -1,19 +1,44 @@
-# Repository Guidelines
+# 仓库开发规范
+## 一、项目结构与模块划分
+`src/` 目录存放查看器全部 TypeScript 应用代码。核心资源加载器、程序入口文件置于根目录；各类业务逻辑按领域分文件夹管理，例如 `src/terrain/`（地形模块）、`src/utils/`（通用工具）、`src/helpers/`（3D辅助工具）、`src/crypto/`（加密解密模块）。
 
-## Project Structure & Module Organization
-`src/` contains the TypeScript application code for the viewer. Core loaders and app entrypoints live at the top level, while domain-specific logic is grouped in folders such as `src/terrain/`, `src/utils/`, `src/helpers/`, and `src/crypto/`. Desktop packaging code lives in `electron/` (`main.js`, `preload.js`). Tests live in `tests/` and include both `.test.ts` files and binary fixtures such as `.bmd` samples. Build output goes to `dist/`; installer artifacts go to `release/`. Reference material lives in `muonline/` and `docs/`.
+桌面端打包相关代码存放于 `electron/`（包含 `main.js`、`preload.js`）；单元测试代码在 `tests/`，内部包含 `.test.ts` 测试脚本与 `.bmd` 等二进制测试样例。
+网页打包产物输出至 `dist/`，桌面安装包生成在 `release/`；参考资料、素材文档分别放在 `muonline/`、`docs/`。
 
-## Build, Test, and Development Commands
-Use `npm run dev` to start the Vite dev server for browser work. Use `npm run electron` to run the Electron shell against the local Vite server. Use `npm run build` to generate a production web build in `dist/`. Use `npm run electron:build` to package the desktop app with `electron-builder`. Run `npm test` to execute the Jest suite with `ts-jest`.
+## 二、构建、测试与开发命令
+- `npm run dev`：启动 Vite 开发服务，用于网页端调试
+- `npm run electron`：启动 Electron 客户端，连接本地 Vite 开发服务
+- `npm run build`：打包生产环境网页端，输出至 `dist/`
+- `npm run electron:build`：通过 electron-builder 打包桌面客户端安装程序
+- `npm test`：执行 Jest 单元测试套件（ts-jest 驱动）
 
-## Coding Style & Naming Conventions
-This project uses strict TypeScript (`strict: true`) with CommonJS output for tests and tooling. Follow the existing style: 4-space indentation, semicolons, single quotes, and explicit type imports where helpful. Use `PascalCase` for classes and scene modules (`TerrainScene`), `camelCase` for functions and variables, and descriptive filenames ending in `.test.ts` for tests. Keep new code feature-focused; prefer adding logic to `src/terrain/` or `src/utils/` instead of growing `src/main.ts` unnecessarily. No formatter or linter is currently wired in, so match surrounding code closely.
+## 三、代码规范与命名规则
+本项目启用 TypeScript 严格模式（`strict: true`），测试与工具脚本输出格式为 CommonJS。统一遵循现有代码风格：
+1. 缩进使用 4 个空格，代码行末尾加分号，字符串统一单引号；
+2. 类型导入按需显式声明；
+3. 类、场景模块采用**大驼峰 PascalCase**，例：`TerrainScene`；
+4. 函数、变量采用**小驼峰 camelCase**；
+5. 测试文件统一以 `.test.ts` 结尾，文件名表意清晰。
 
-## Testing Guidelines
-Jest is the active test runner, configured in `jest.config.js` with the Node environment. Add unit tests alongside the existing patterns in `tests/`, for example `tests/TerrainExplorerUtils.test.ts`. Reuse fixture files in `tests/` for loader and parser coverage instead of duplicating binary assets. Target meaningful coverage for loaders, parsing, and state-management changes before opening a PR.
+新增代码遵循单一功能原则：地形相关逻辑放入 `src/terrain/`，通用工具放入 `src/utils/`，禁止无限制膨胀 `src/main.ts`。
+项目暂未配置格式化/语法校验工具，新增代码需与周边现有代码风格保持一致。
 
-## Commit & Pull Request Guidelines
-Recent history uses Conventional Commit style, especially `feat: ...`. Follow the same format for all changes, for example `fix: handle missing terrain texture fallback`. Keep pull requests focused and include: a short summary, testing notes (`npm test`, Electron smoke test), and screenshots or short recordings for viewer UI changes.
+## 四、单元测试规范
+测试框架使用 Jest，配置文件为 `jest.config.js`，运行环境为 Node。
+1. 新增单元测试遵循 `tests/` 内现有模板，示例：`tests/TerrainExplorerUtils.test.ts`；
+2. 复用 `tests/` 内置素材文件做加载器、解析器测试，禁止重复上传二进制资源；
+3. 提交PR前，需保证资源解析、文件加载、状态管理相关改动拥有有效测试用例覆盖。
 
-## Configuration & Asset Tips
-Do not commit secrets or machine-specific absolute paths. Large MU Online assets should stay out of source unless they are required as small test fixtures. When adding new sample models or textures, document where they are used and keep names stable so tests and manual QA remain reproducible.
+## 五、提交记录与合并请求规范
+项目历史提交均采用**约定式提交（Conventional Commit）**，以 `feat:`、`fix:` 等前缀开头，所有修改统一遵守该格式。
+示例：`fix: 兼容缺失地形贴图降级方案`
+
+合并请求（PR）要求功能单一，提交内容必须包含：
+1. 简短修改概述；
+2. 测试说明（单元测试 `npm test`、Electron 基础功能自测）；
+3. 若改动UI预览界面，附上截图或简短操作录屏。
+
+## 六、配置文件与资源提交须知
+1. 禁止提交密钥、本机专属绝对路径等隐私内容；
+2. 大型MU游戏资源不纳入版本库，仅少量必需测试样例素材允许上传；
+3. 新增测试模型/贴图时，在文档标注其使用场景，保持文件名固定，确保自动化测试、人工复测结果统一可复现。
