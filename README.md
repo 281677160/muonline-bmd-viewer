@@ -1,247 +1,210 @@
-# MU Online Client Editor
+# MU Online 客户端编辑器
+一套现代化、基于网页开发的MU Online客户端文件查看与编辑工具。采用 TypeScript、Three.js、Vite 技术栈开发，内置 `.bmd` 模型、地形交互式3D预览器，同时提供道具、技能、GFx界面、音效资源数据浏览功能。
 
-A modern, web-based toolkit for inspecting and editing MU Online client files. Built with TypeScript, Three.js, and Vite, it provides interactive 3D viewers for `.bmd` models and terrain, alongside data browsers for items, skills, GFx UI, and sound assets.
+> **版本** 1.1.0 | **开源协议** ISC
 
-> **Version** 1.1.0 | **License** ISC
+## 功能特性
+### 核心预览模块
+- **模型预览器**：支持拖拽加载 `.bmd` 3D模型；批量读取整个模型文件夹并自动生成缩略图；桌面端Electron可自动检索对应贴图。
+- **角色预览器**：可自定义全套装备预览（头盔、铠甲、护腿、手套、靴子、左右手武器、翅膀）；支持道具强化等级+0~+15、卓越、套装特效；覆盖全版本15+种角色职业；动画播放控制、配置预设存档。
+- **世界/地形预览器**：完整加载MU游戏地图地形，自由视角操控；物体选中并附带变换操纵器（移动/旋转）、物体单独隔离显示；自定义物体材质覆盖（配置持久化JSON）、小地图导航、视角书签；支持导出OBJ地形模型。
 
-## Features
+### 数据浏览工具
+- **道具浏览器**：解析读取 `items.bmd` 文件，展示装备全部属性；支持关键词搜索、道具类型筛选（武器、防具、药水、宝石）。
+- **技能浏览器**：解析读取 `skill.bmd` 文件，展示技能完整参数；支持搜索、技能分类筛选（攻击、增益、减益、辅助）。
+- **地形属性查看器**：解析 `.att` 地形属性文件，交互式地图画布；可开关各类标记图层、鼠标悬浮查看单格子详细参数。
+- **OZJ/OZT贴图浏览器**：批量浏览 `.ozj`、`.ozt` 贴图文件，网格缩略图+原图预览；支持文件检索、贴图格式筛选。
+- **GFx界面浏览器**：加载渲染 `.ozg`、`.gfx`、`.swf` 游戏UI界面，画布支持缩放平移；内置位图画廊、SWF标签数据表查看；读取 `.ozd` 贴图资源并解码DDS格式。
+- **音效浏览器**：批量读取文件夹内 `.ogg`、`.wav`、`.mp3` 音效；播放控制、音量调节、文件名检索。
 
-### Core Viewers
+### 3D模型专项功能
+- **贴图兼容**：支持 `.jpg`、`.png`、`.tga`、`.ozj`、`.ozt` 各类贴图自动加载，自动识别混合渲染模式。
+- **渲染后端**：每个预览窗口可独立选择渲染器（自动优先WebGPU / WebGPU专用 / WebGL）；无WebGPU环境自动降级兼容。
+- **动画播放**：加载模型全部内置动画，可调播放速度、开关动画。
+- **外部动画导入**：读取其他 `.bmd` 文件的骨骼动画套用到当前模型。
+- **挂件附着系统**：将另一套 `.bmd` 模型绑定到主模型任意骨骼，下拉菜单/滑块快速切换绑定骨骼。
+- **帧锁定**：一键锁定动画至当前播放帧。
+- **视窗辅助显示**：可切换线框、骨骼骨架、包围盒、坐标轴、顶点法线显示开关。
+- **场景参数调节**：模型缩放、场景亮度、背景色自定义；一键自动旋转预览。
+- **网格混合微调**：自动材质识别出错时，可单独调整每个网格的贴图混合模式、透明阈值。
+- **GIF动图导出**：导出模型动画GIF，自定义分辨率、帧间隔、平滑倍率。
+- **GLB模型导出**：将模型+动画导出为标准GLB文件，支持AI预烘焙蒙皮网格专用导出模式。
+- **贴图批量导出**：将模型所有使用贴图导出为PNG图片。
+- **模型文件夹快速浏览**：批量加载文件夹内全部 `.bmd`，自动生成3D缩略图、延迟渲染提升性能。
+- **诊断信息面板**：实时显示模型数据：网格顶点数、骨骼数量、动画片段、关键帧总数、当前帧、渲染帧率。
 
-- **Model Viewer**: Load and inspect `.bmd` 3D models with drag-and-drop support. Browse entire folders of models with auto-generated thumbnails. Automatic texture search in Electron.
-- **Character Viewer**: Preview character models with customizable equipment (helm, armor, pants, gloves, boots, left/right hand weapons, wings), item effects (level +0 to +15, Excellent, Ancient), 15+ character classes across all tiers, animation control, and presets.
-- **World/Terrain Viewer**: Load and explore MU Online world terrain with interactive camera, object selection with transform gizmo (move/rotate), object isolation, object overrides (persisted to JSON), minimap navigation, bookmarks, and OBJ export.
+### 角色预览专项功能
+- 完整装备槽位系统（头盔、铠甲、护腿、手套、靴子、左右手、翅膀）
+- 道具强化等级+0~+15，卓越、套装特效开关
+- 卓越流光亮度自定义调节
+- 角色配置预设（一键保存/读取职业、全套装备、渲染参数）
+- 独立渲染后端、视窗辅助显示、GIF动画导出功能
 
-### Data Browsers
+### 世界/地形专项功能
+- 直接读取游戏完整Data资源文件夹，按序号切换地图
+- 内置小地图，实时标记相机位置
+- 坐标跳转快速定位
+- 地形物体选中、单独隔离、一键跳转至模型预览器打开
+- 物体变换操纵器（平移/旋转），支持应用修改/重置参数
+- 物体编辑面板：位置、缩放、各类材质自定义覆盖
+- ATT地形属性叠加层，可视化TW地形标记
+- 视角书签（保存/读取相机视角位置）
+- 地图地形整体导出OBJ模型
+- 自定义物体修改配置持久保存至 `terrain-object-overrides.json`
+- 线框显示、物体动画、太阳光、物体渲染距离开关调节
 
-- **Items Browser**: Parse and explore `items.bmd` files with equipment stats, search, and item kind filtering (Weapon, Armor, Potion, Jewel).
-- **Skills Browser**: Parse and explore `skill.bmd` files with skill statistics, search, and type filtering (Attack, Buff, De-Buff, Friendly).
-- **ATT Inspector**: Inspect terrain attribute data (`.att` files) with interactive map canvas, flag layer toggles, and per-tile tooltips.
-- **OZJ/OZT Browser**: Browse `.ozj` and `.ozt` texture files with thumbnail grid, full-size preview, navigation, search, and format filtering.
-- **GFx Browser**: Load and render `.ozg`, `.gfx`, `.swf` UI files on a zoomable/pannable stage canvas. View embedded bitmaps in a gallery, browse SWF tag tables, and load `.ozd` texture galleries with DDS decoding.
-- **Sound Browser**: Browse and play `.ogg`, `.wav`, `.mp3` sound files from a folder with playback controls, volume slider, and filename search.
+### 附加通用功能
+- **演示模式**：隐藏全部UI界面，纯净截图/模型展示
+- **面板自定义大小**：侧边栏、日志栏拖拽缩放；一键重置布局
+- **内置解密引擎**：支持加密游戏资源解密（CAST5、IDEA、GOST、LEA256、MARS、RC5、RC6、TEA、ThreeWay、模运算加密）
+- **实时日志栏**：全局日志输出，每个预览窗口独立状态指示器
 
-### 3D Model Features
+## 桌面客户端（Electron）
+桌面版拥有网页端不具备的本地权限功能：
+- 原生系统文件选择窗口，打开文件/文件夹
+- 加载模型时自动检索同级目录贴图资源
+- 完整本地文件读写权限，直接读取地图地形资源
+- 地形自定义物体配置可读写至用户本地目录
+- 跨平台安装包构建：Windows（NSIS安装包 x64）、Linux（AppImage x64）、macOS（DMG镜像）
 
-- **Texture Support**: Apply various texture formats including `.jpg`, `.png`, `.tga`, `.ozj`, `.ozt` with automatic blend-mode detection.
-- **Renderer Backend**: Choose between Auto (prefer WebGPU), WebGPU, or WebGL renderer per viewer. Automatic fallback when WebGPU is unavailable.
-- **Animation Playback**: View all embedded animations with adjustable playback speed and enable/disable toggle.
-- **External Animations**: Load bone animations from a different `.bmd` file.
-- **Attachment System**: Attach a secondary `.bmd` model to any bone of the main model with bone selection via dropdown or slider.
-- **Frame Lock**: Lock the animation on a specific frame with "Set Current" convenience button.
-- **Viewport Helpers**: Toggle wireframe, skeleton, bounding box, axes, and vertex normals visibility.
-- **Scene Controls**: Adjust model scale, scene brightness, and background color. Auto-rotate toggle.
-- **Mesh Blending**: Fine-tune texture blending mode and alpha threshold per mesh when automatic material detection needs correction.
-- **GIF Export**: Export model animations as `.gif` with configurable resolution, frame delay, and smoothness multiplier.
-- **GLB Export**: Export models and animations to `.glb` format (standard or AI-baked with skinned mesh pre-bake).
-- **Texture Export**: Export all applied textures to `.png` format.
-- **Model Folder Browser**: Load a folder of `.bmd` files and browse them with auto-generated 3D thumbnail previews and lazy rendering.
-- **Diagnostics Panel**: View real-time info about the loaded model - mesh vertices, bone count, animation clips, key count, current frame, and FPS.
+## 技术栈
+- **开发语言**：TypeScript（严格类型模式）
+- **3D渲染引擎**：Three.js（同时支持WebGPU / WebGL渲染后端）
+- **项目构建**：Vite 分包构建（Rolldown）
+- **桌面端框架**：Electron + electron-builder
+- **单元测试**：Jest + ts-jest
+- **自动化流水线**：GitHub Actions — 自动部署网页版至GitHub Pages；提交主分支自动打包桌面安装程序
 
-### Character Viewer Features
+## 快速上手
+### 环境依赖
+- [Node.js](https://nodejs.org/) v22及以上（CI测试稳定版本v22.12.0）
+- [npm](https://www.npmjs.com/) 包管理器
 
-- Full equipment slot system (helm, armor, pants, gloves, boots, left/right hand, wings).
-- Item level (+0 to +15) with Excellent and Ancient modifier flags.
-- Excellent glow intensity control.
-- Character presets (save and restore class, gear, and render state).
-- Per-viewer renderer backend, viewport helpers, and GIF export.
-
-### World/Terrain Features
-
-- Load entire `Data` folder and select world by index.
-- Minimap with camera position tracking.
-- Jump-to-coordinate navigation.
-- Terrain object selection with focus, isolate, and "Open in Model Viewer" actions.
-- Object transform gizmo (translate/rotate) with apply/reset.
-- Object editor panel with position, scale, and per-type material overrides.
-- ATT attribute overlay with TWFlags visualization.
-- Bookmarks (save/restore camera positions).
-- Export world geometry as OBJ.
-- Terrain object overrides persisted to `terrain-object-overrides.json`.
-- Wireframe, animations, sun light, and object draw-distance controls.
-
-### Additional Features
-
-- **Presentation Mode**: Hide all UI for clean model viewing and screenshots.
-- **Panel Resizing**: Drag to resize sidebar and log bar; reset layout button.
-- **Crypto Engine**: Built-in decryptors for encrypted game assets (CAST5, IDEA, GOST, LEA256, MARS, RC5, RC6, TEA, ThreeWay, modulus).
-- **Log Bar**: Real-time log output with per-viewer status indicators.
-
-## Desktop App (Electron)
-
-The desktop version provides additional capabilities not available in the browser:
-
-- Native file dialogs for opening files and directories.
-- Automatic texture search in nearby folders when loading a model.
-- Direct file system access for loading world data and terrain objects.
-- Terrain object overrides read/write to user data directory.
-- Cross-platform builds: Windows (NSIS installer, x64), Linux (AppImage, x64), macOS (DMG).
-
-## Tech Stack
-
-- **Language**: TypeScript (strict mode)
-- **3D Engine**: Three.js (with WebGPU + WebGL renderer support)
-- **Build**: Vite with code-splitting (Rolldown)
-- **Desktop**: Electron with electron-builder
-- **Test**: Jest with ts-jest
-- **CI/CD**: GitHub Actions - auto-deploy to GitHub Pages, build Electron installers on push to main
-
-## Getting Started
-
-### Prerequisites
-
-- [Node.js](https://nodejs.org/) v22+ (v22.12.0 tested in CI)
-- [npm](https://www.npmjs.com/)
-
-### Installation
-
-1. Clone the repository or download the source code.
-2. Open a terminal in the project directory.
-3. Install the required dependencies:
-
+### 安装步骤
+1. 克隆项目仓库或下载完整源码包
+2. 终端进入项目根目录
+3. 执行命令安装依赖：
 ```bash
 npm install
 ```
 
-### Development
-
-**Web (browser)**:
-
+### 开发调试
+**网页端（浏览器运行）**
 ```bash
 npm run dev
 ```
+启动后访问 `http://localhost:5173`，代码修改实时热更新
 
-Opens at `http://localhost:5173` with hot-reloading.
-
-**Electron (desktop)**:
-
+**桌面端（Electron客户端）**
 ```bash
 npm run electron
 ```
+自动启动Vite开发服务，编译完成后弹出客户端窗口
 
-Starts Vite dev server and launches the Electron shell once ready.
-
-### Production Build
-
-**Web**:
-
+### 生产打包
+**网页版打包**
 ```bash
 npm run build
 ```
+打包产物输出至 `dist/` 文件夹；可配置环境变量 `VITE_BASE_PATH` 修改部署根路径（用于GitHub Pages等场景）
 
-Output goes to `dist/`. Set `VITE_BASE_PATH` for custom base paths (e.g. GitHub Pages).
-
-**Electron desktop app**:
-
+**Electron桌面安装包打包**
 ```bash
 npm run electron:build
 ```
+安装包生成至 `release/` 目录；支持参数限定打包系统 `--win`、`--linux`
 
-Generates installers in `release/`. Supports `--win` and `--linux` flags.
-
-### Running Tests
-
+### 执行单元测试
 ```bash
 npm test
 ```
+基于Jest + ts-jest，Node环境运行测试；覆盖文件解析器、资源解码器、地形工具、加密算法、UI组件全部逻辑
 
-Jest suite with ts-jest, running in Node environment. Tests cover loaders, parsers, terrain utilities, crypto ciphers, and UI components.
+## 使用教程
+### 界面导航
+软件采用分页标签布局，共9个功能工作区：
 
-## How to Use
-
-### Navigation
-
-The application uses a tabbed interface with 9 workspaces:
-
-| Tab | Purpose |
+| 标签页 | 功能说明 |
 |---|---|
-| **Model** | View `.bmd` 3D models with textures, animations, and attachments |
-| **Character** | Preview characters with customizable class, equipment, and effects |
-| **World** | Explore terrain with interactive camera and object editing |
-| **ATT** | Analyze terrain attribute files with color-coded TWFlags map |
-| **OZJ** | Browse `.ozj`/`.ozt` texture files with grid and preview |
-| **Items** | Search and inspect item definitions from `items.bmd` |
-| **Skills** | Search and inspect skill definitions from `skill.bmd` |
-| **GFx** | Render `.ozg`/`.gfx`/`.swf` UI files and browse `.ozd` textures |
-| **Sound** | Browse and play `.ogg`/`.wav`/`.mp3` sound files |
+| **模型** | 加载`.bmd`三维模型，预览贴图、动画、挂件绑定 |
+| **角色** | 自定义职业、全套装备、道具特效预览角色模型 |
+| **世界** | 完整地图地形浏览、物体编辑、视角导航 |
+| **ATT地形属性** | 地形格子标记可视化，解析`.att`属性文件 |
+| **OZJ贴图** | 批量查看`.ozj`/`.ozt`贴图资源 |
+| **道具** | 读取`items.bmd`查看全游戏道具数据 |
+| **技能** | 读取`skill.bmd`查看全职业技能参数 |
+| **GFx界面** | 渲染`.ozg`/`.gfx`/`.swf`游戏UI、解析`.ozd`贴图 |
+| **音效** | 批量播放、检索ogg/wav/mp3音效文件 |
 
-### Model Viewer Workflow
+### 模型预览器操作流程
+1. **加载模型**：将`.bmd`文件拖拽至投放区域，或点击打开文件窗口；Electron桌面端自动调用系统原生文件选择器
+2. **批量浏览文件夹**：拖拽模型文件夹，自动生成全部模型缩略图列表
+3. **加载贴图**：模型载入后会显示缺失贴图清单，拖拽对应贴图文件（jpg/tga/ozj/ozt）即可自动匹配；桌面端自动检索目录贴图无需手动拖入
+4. **动画控制**：切换不同动画片段，调节播放速度、启停动画、锁定单帧
+5. **挂件绑定**：拖拽附属`.bmd`模型，下拉选择绑定骨骼完成挂载
+6. **视窗设置**：开关线框/骨骼/包围盒/坐标轴/法线；调整背景色、亮度、切换渲染后端
+7. **导出资源**：一键导出GLB模型、AI预烘焙GLB、贴图PNG、GIF动画
 
-1. **Load a Model**: Drag and drop a `.bmd` file onto the drop zone, or click to open the file selector. In Electron, native file dialog is used automatically.
-2. **Browse a Folder**: Drop or select a folder of `.bmd` files to browse models with thumbnail previews.
-3. **Apply Textures**: Once the model is loaded, the viewer shows required textures. Drop the corresponding texture files (`.jpg`, `.tga`, `.ozj`, `.ozt`). In Electron, textures are searched automatically.
-4. **Control Animations**: Use the animation buttons to play different clips, adjust speed, enable/disable, or lock a specific frame.
-5. **Attach Models**: Drop an attachment `.bmd` and select a bone to attach it to.
-6. **Adjust Viewport**: Toggle wireframe, skeleton, bounding box, axes, normals; change background color and brightness; switch renderer backend.
-7. **Export**: Use export buttons for GLB, AI GLB (baked), textures (PNG), or GIF.
+### 角色预览器操作流程
+1. **加载游戏资源**：拖拽完整游戏`Data`文件夹，自动载入全部职业与装备数据
+2. **选择职业**：下拉菜单切换15+种全版本角色职业
+3. **穿戴装备**：分别设置头盔、铠甲、护腿、手套、靴子、左右手武器、翅膀
+4. **道具特效调节**：设置强化等级+0~+15，开关卓越/套装特效，调整流光强度
+5. **配置预设**：保存当前职业、装备、渲染参数为预设方案，一键读取
+6. **导出动画**：录制角色动作GIF动图
 
-### Character Viewer Workflow
+### 世界/地形预览器操作流程
+1. **加载游戏资源**：拖拽`Data`文件夹，下拉选择需要加载的地图
+2. **视角导航**：使用小地图快速跳转，或输入坐标直达；保存常用视角为书签
+3. **地形属性查看**：开启ATT图层覆盖可视化地形标记；切换至ATT标签页查看单格详细数据
+4. **物体编辑**：鼠标点击场景内物体，使用操纵器移动/旋转；右键打开物体编辑面板
+5. **自定义修改物体**：调整物体位置、缩放、单独覆盖材质；修改自动保存至配置文件
+6. **导出地形**：将整张地图地形导出为OBJ三维模型文件
 
-1. **Load Game Data**: Drop the game `Data` folder to populate class and equipment lists.
-2. **Choose a Class**: Select a character class from the dropdown (15+ classes across all tiers).
-3. **Equip Items**: Set helm, armor, pants, gloves, boots, weapons, and wings.
-4. **Adjust Item Effects**: Set item level (+0 to +15), toggle Excellent/Ancient, adjust glow intensity.
-5. **Save Presets**: Save and restore the current configuration.
-6. **Export**: Record a GIF of the character.
+### 数据浏览器通用流程
+1. **载入资源文件**：对应标签页拖拽对应资源文件（`items.bmd`/`skill.bmd`/`.att`/贴图/UI文件/音效文件夹）
+2. **检索功能**：搜索框支持按名称、ID、编号筛选资源
+3. **分类过滤**：按道具/技能/贴图类型快速精简列表
+4. **详情查看**：点击列表条目，右侧面板展示完整参数信息
 
-### World/Terrain Workflow
+### 存档与预设功能
+- **地形视角书签**：世界预览器内保存相机视角，一键切换地图观测位置
+- **角色配置预设**：存档整套职业、装备、渲染画面参数，快速复用搭配
 
-1. **Load Game Data**: Drop the `Data` folder and select a world to load.
-2. **Navigate**: Use the minimap or jump to coordinates. Save bookmarks for quick access.
-3. **Inspect ATT**: Toggle ATT overlay to visualize terrain flags; use the ATT Inspector tab for detailed per-tile lookup.
-4. **Select Objects**: Click objects in the scene; use the gizmo to move or rotate them. Right-click for the object editor panel.
-5. **Edit Objects**: Adjust position, scale, and material overrides. Settings persist to `terrain-object-overrides.json`.
-6. **Export**: Export world geometry as OBJ.
-
-### Data Browser Workflow
-
-1. **Load Files**: Drag and drop `items.bmd`, `skill.bmd`, `.att`, `.ozj`/`.ozt`, `.ozg`/`.gfx`/`.swf`/`.ozd`, or sound folders into the respective browser tabs.
-2. **Search**: Use the search bar to find specific entries by name, index, or ID.
-3. **Filter**: Use type/kind/format filters to narrow down results.
-4. **View Details**: Click any row to see detailed information in the detail panel.
-
-### Bookmarks and Presets
-
-- **Terrain Bookmarks**: Save camera positions in the World viewer for quick navigation.
-- **Character Presets**: Save and manage character class, equipment, and render state configurations.
-
-## Project Structure
-
+## 项目目录结构
 ```
 src/
-  main.ts                  # Model viewer app entry point
-  character-test-scene.ts  # Character viewer scene
-  terrain-scene.ts         # World/terrain viewer scene
-  bmd-loader.ts            # BMD format parser
-  ozj-loader.ts            # OZJ texture decoder
-  app/                     # Explorer shell and state management
-  att-inspector/           # ATT file inspector
-  bmd-writer/              # BMD writer (placeholder)
-  control-menu/            # Sidebar control menu system
-  crypto/                  # Cipher implementations (CAST5, IDEA, GOST, etc.)
-  explorer-state/          # Persistent state store
-  gfx-browser/             # GFx/OZG/SWF/OZD browser
-  helpers/                 # Three.js helper utilities
-  item-bmd-browser/        # Items BMD data browser
-  ozj-browser/             # OZJ/OZT texture browser
-  rendering/               # WebGPU/WebGL renderer backend abstraction
-  skill-bmd-browser/       # Skills BMD data browser
-  sound-browser/           # Sound file browser and player
-  terrain/                 # Terrain loaders, mesh, objects, culling, texturing
-  utils/                   # File validation, texture matching, blend heuristics, etc.
-  styles/                  # CSS stylesheets
+  main.ts                  # 模型预览器主程序入口
+  character-test-scene.ts  # 角色预览3D场景逻辑
+  terrain-scene.ts         # 世界地形预览场景逻辑
+  bmd-loader.ts            # BMD模型格式解析器
+  ozj-loader.ts            # OZJ贴图解码工具
+  app/                     # 软件主外壳、全局状态管理
+  att-inspector/           # ATT地形属性查看模块
+  bmd-writer/              # BMD模型写入工具（预留开发接口）
+  control-menu/            # 侧边栏控制面板逻辑
+  crypto/                  # 各类加密解密算法实现（CAST5、IDEA、GOST等）
+  explorer-state/          # 全局持久化状态存储
+  gfx-browser/             # GFx/OZG/SWF/OZD界面资源浏览器
+  helpers/                 # Three.js通用工具函数
+  item-bmd-browser/        # items.bmd道具数据浏览器
+  ozj-browser/             # OZJ/OZT贴图浏览模块
+  rendering/               # WebGPU/WebGL渲染后端抽象层
+  skill-bmd-browser/       # skill.bmd技能数据浏览器
+  sound-browser/           # 音效文件浏览与播放器
+  terrain/                 # 地形加载、网格、物体剔除、贴图逻辑
+  utils/                   # 文件校验、贴图匹配、混合模式自动判断等工具
+  styles/                  # 全局样式CSS文件
 electron/
-  main.js                  # Electron main process
-  preload.js               # Preload script for IPC bridge
-tests/                     # Jest test suite
-docs/                      # Documentation and plans
+  main.js                  # Electron主进程
+  preload.js               # IPC通信桥接预加载脚本
+tests/                     # Jest单元测试套件
+docs/                      # 项目文档、开发规划文档
 ```
 
-## CI/CD
-
-GitHub Actions workflow (`.github/workflows/deploy.yml`) runs on pushes to `main`:
-
-- **Web build**: Builds Vite app and deploys to GitHub Pages (under `/app/` path).
-- **Linux build**: Creates an AppImage artifact.
-- **Windows build**: Creates an NSIS installer artifact.
-- **Release**: Uploads desktop builds to a GitHub Release with auto-generated tag.
+## CI/CD自动化流水线
+GitHub Actions配置文件（`.github/workflows/deploy.yml`），提交代码至main分支自动执行：
+- **网页打包部署**：Vite构建网页程序，自动发布至GitHub Pages（路径 /app/）
+- **Linux安装包构建**：生成AppImage可执行程序安装包
+- **Windows安装包构建**：生成NSIS可视化安装程序
+- **版本发布**：自动打包桌面端全部安装包，上传至GitHub Release并生成版本标签
